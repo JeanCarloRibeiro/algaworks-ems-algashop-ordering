@@ -1,5 +1,7 @@
 package com.algashop.ordering.domain.entity;
 
+import org.apache.commons.validator.routines.EmailValidator;
+
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -21,37 +23,35 @@ public class Customer {
   public Customer(UUID id, String fullName, LocalDate birthDate, String email,
                   String phone, String document, Boolean promotionNotificationsAllowed,
                   OffsetDateTime registeredAt) {
-    this.id = id;
-    this.fullName = fullName;
-    this.birthDate = birthDate;
-    this.email = email;
-    this.phone = phone;
-    this.document = document;
-    this.promotionNotificationsAllowed = promotionNotificationsAllowed;
-    this.registeredAt = registeredAt;
+    this.setId(id);
+    this.setFullName(fullName);
+    this.setBirthDate(birthDate);
+    this.setEmail(email);
+    this.setPhone(phone);
+    this.setDocument(document);
+    this.setPromotionNotificationsAllowed(promotionNotificationsAllowed);
+    this.setRegisteredAt(registeredAt);
+    this.setLoyaltyPoints(0);
+    this.setArchived(false);
   }
 
   public Customer(UUID id, String fullName, LocalDate birthDate, String email,
                   String phone, String document, Boolean promotionNotificationsAllowed,
                   OffsetDateTime registeredAt, OffsetDateTime archivedAt, Integer loyaltyPoints) {
-    this.id = id;
-    this.fullName = fullName;
-    this.birthDate = birthDate;
-    this.email = email;
-    this.phone = phone;
-    this.document = document;
-    this.promotionNotificationsAllowed = promotionNotificationsAllowed;
-    this.registeredAt = registeredAt;
-    this.archivedAt = archivedAt;
-    this.loyaltyPoints = loyaltyPoints;
+    this.setId(id);
+    this.setFullName(fullName);
+    this.setBirthDate(birthDate);
+    this.setEmail(email);
+    this.setPhone(phone);
+    this.setDocument(document);
+    this.setPromotionNotificationsAllowed(promotionNotificationsAllowed);
+    this.setRegisteredAt(registeredAt);
+    this.setArchivedAt(archivedAt);
+    this.setLoyaltyPoints(loyaltyPoints);
   }
 
   public void addLoyaltyPoints(Integer loyaltyPoints) {
-    this.setLoyaltyPoints(10);
-  }
-
-  public void archive() {
-    this.setArchived(true);
+    this.setLoyaltyPoints(loyaltyPoints);
   }
 
   public void enablePromotionNotifications() {
@@ -119,38 +119,59 @@ public class Customer {
   }
 
   private void setId(UUID id) {
+    Objects.requireNonNull(id);
     this.id = id;
   }
 
   private void setFullName(String fullName) {
+    Objects.requireNonNull(fullName, "fullName required.");
+    if (email.isBlank()) {
+      throw new IllegalArgumentException();
+    }
+    if (!EmailValidator.getInstance().isValid(email)) {
+      throw new IllegalArgumentException();
+    }
     this.fullName = fullName;
   }
 
   private void setBirthDate(LocalDate birthDate) {
+    if (birthDate == null) {
+      this.birthDate = null;
+      return;
+    }
+    if (birthDate.isAfter(LocalDate.now())) {
+      throw new IllegalArgumentException();
+    }
     this.birthDate = birthDate;
   }
 
   private void setEmail(String email) {
+    Objects.requireNonNull(email);
     this.email = email;
   }
 
   private void setPhone(String phone) {
+    Objects.requireNonNull(phone);
     this.phone = phone;
   }
 
   private void setDocument(String document) {
+    Objects.requireNonNull(document);
     this.document = document;
   }
 
   private void setPromotionNotificationsAllowed(Boolean promotionNotificationsAllowed) {
+    Objects.requireNonNull(promotionNotificationsAllowed);
     this.promotionNotificationsAllowed = promotionNotificationsAllowed;
   }
 
   public void setArchived(Boolean archived) {
+    Objects.requireNonNull(archived);
     this.archived = archived;
   }
 
   private void setRegisteredAt(OffsetDateTime registeredAt) {
+    Objects.requireNonNull(registeredAt);
     this.registeredAt = registeredAt;
   }
 
