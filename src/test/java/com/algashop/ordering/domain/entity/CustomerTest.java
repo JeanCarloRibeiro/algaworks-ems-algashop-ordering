@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class CustomerTest {
   @Test
   void given_invalidEmail_whenTryCreateCustomer_shouldGenerateException() {
@@ -19,7 +21,7 @@ public class CustomerTest {
                   LocalDate.of(1986, 2, 10),
                   "invalid",
                   "478-256-2504",
-                  "25508-0578",
+                  "255-08-0578",
                   false,
                   OffsetDateTime.now());
         });
@@ -34,7 +36,7 @@ public class CustomerTest {
             LocalDate.of(1986, 2, 10),
             "jean@test.com",
             "478-256-2504",
-            "25508-0578",
+            "255-08-0578",
             false,
             OffsetDateTime.now());
 
@@ -44,4 +46,26 @@ public class CustomerTest {
             });
   }
 
+  @Test
+  void given_unarchivedCustomer_whenArchive_shouldAnonymize() {
+    Customer customer = new Customer(
+            IdGenerator.generateTimeBasedUUID(),
+            "Jean Carlo",
+            LocalDate.of(1986, 2, 10),
+            "jean@test.com",
+            "478-256-2504",
+            "255-08-0578",
+            false,
+            OffsetDateTime.now());
+
+    customer.archive();
+
+    Assertions.assertWith(customer,
+            c -> assertThat(c.fullName()).isEqualTo("Anonymous"),
+            c -> assertThat(c.email()).isNotEqualTo("jean@test.com"),
+            c -> assertThat(c.phone()).isEqualTo("000-000-0000"),
+            c -> assertThat(c.document()).isEqualTo("000-00-0000"),
+            c -> assertThat(c.birthDate()).isNull()
+    );
+  }
 }
