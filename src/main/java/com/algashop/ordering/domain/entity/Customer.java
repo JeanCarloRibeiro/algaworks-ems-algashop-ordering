@@ -1,5 +1,6 @@
 package com.algashop.ordering.domain.entity;
 
+import com.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.algashop.ordering.domain.exception.ErrorMessages;
 import com.algashop.ordering.domain.utility.validator.FieldValidations;
 
@@ -36,13 +37,13 @@ public class Customer {
     this.setDocument(document);
     this.setPromotionNotificationsAllowed(promotionNotificationsAllowed);
     this.setRegisteredAt(registeredAt);
-    this.setLoyaltyPoints(0);
     this.setArchived(false);
+    this.setLoyaltyPoints(0);
   }
 
-  public Customer(UUID id, String fullName, LocalDate birthDate, String email,
-                  String phone, String document, Boolean promotionNotificationsAllowed,
-                  OffsetDateTime registeredAt, OffsetDateTime archivedAt, Integer loyaltyPoints) {
+  public Customer(UUID id, String fullName, LocalDate birthDate, String email, String phone,
+                  String document, Boolean promotionNotificationsAllowed, OffsetDateTime registeredAt,
+                  Boolean archived, OffsetDateTime archivedAt, Integer loyaltyPoints) {
     this.setId(id);
     this.setFullName(fullName);
     this.setBirthDate(birthDate);
@@ -51,6 +52,7 @@ public class Customer {
     this.setDocument(document);
     this.setPromotionNotificationsAllowed(promotionNotificationsAllowed);
     this.setRegisteredAt(registeredAt);
+    this.setArchived(archived);
     this.setArchivedAt(archivedAt);
     this.setLoyaltyPoints(loyaltyPoints);
   }
@@ -60,6 +62,7 @@ public class Customer {
   }
 
   public void archive() {
+    verifyIfChangeable();
     this.setArchived(true);
     this.setArchivedAt(OffsetDateTime.now());
     this.setFullName("Anonymous");
@@ -67,25 +70,31 @@ public class Customer {
     this.setDocument("000-00-0000");
     this.setEmail(UUID.randomUUID() + "@anonymous.com");
     this.setBirthDate(null);
+    this.setPromotionNotificationsAllowed(false);
   }
 
   public void enablePromotionNotifications() {
+    verifyIfChangeable();
     this.setPromotionNotificationsAllowed(true);
   }
 
   public void disablePromotionNotifications() {
+    verifyIfChangeable();
     this.setPromotionNotificationsAllowed(false);
   }
 
   public void changeName(String fullName) {
+    verifyIfChangeable();
     this.setFullName(fullName);
   }
 
   public void changeEmail(String email) {
+    verifyIfChangeable();
     this.setEmail(email);
   }
 
   public void changePhone(String phone) {
+    verifyIfChangeable();
     this.setPhone(phone);
   }
 
@@ -193,6 +202,12 @@ public class Customer {
 
   private void setLoyaltyPoints(Integer loyaltyPoints) {
     this.loyaltyPoints = loyaltyPoints;
+  }
+
+  private void verifyIfChangeable() {
+    if (this.archived.equals(true)) {
+      throw new CustomerArchivedException();
+    }
   }
 
   @Override
