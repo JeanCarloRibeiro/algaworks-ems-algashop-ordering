@@ -105,4 +105,44 @@ public class CustomerTest {
             .isThrownBy(customer::disablePromotionNotifications);
 
   }
+
+  @Test
+  void given_brandCustomer_whenAddLoyaltPoints_shouldSumPoints() {
+    Customer customer = new Customer(
+            IdGenerator.generateTimeBasedUUID(),
+            "Jean Carlo",
+            LocalDate.of(1986, 2, 10),
+            "jean@test.com",
+            "478-256-2504",
+            "255-08-0578",
+            false,
+            OffsetDateTime.now());
+
+    customer.addLoyaltyPoints(10);
+    customer.addLoyaltyPoints(20);
+
+    Assertions.assertWith(customer,
+            c -> assertThat(c.loyaltyPoints()).isEqualTo(30)
+    );
+  }
+
+  @Test
+  void given_brandCustomer_whenAddInvalidLoyaltPoints_shouldGenerateException() {
+    Customer customer = new Customer(
+            IdGenerator.generateTimeBasedUUID(),
+            "Jean Carlo",
+            LocalDate.of(1986, 2, 10),
+            "jean@test.com",
+            "478-256-2504",
+            "255-08-0578",
+            false,
+            OffsetDateTime.now());
+
+    Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> customer.addLoyaltyPoints(0));
+
+    Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> customer.addLoyaltyPoints(-10));
+  }
+
 }
