@@ -9,6 +9,7 @@ import com.algashop.ordering.domain.valueobject.Email;
 import com.algashop.ordering.domain.valueobject.FullName;
 import com.algashop.ordering.domain.valueobject.LoyaltPoints;
 import com.algashop.ordering.domain.valueobject.Phone;
+import lombok.Builder;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -30,7 +31,8 @@ public class Customer {
   private LoyaltPoints loyaltyPoints;
   private Address address;
 
-  public static Customer brandNew(FullName fullName, BirthDate birthDate, Email email,
+  @Builder(builderClassName = "BrandNewCustomerBuild", builderMethodName = "brandNew")
+  private static Customer createBrandNew(FullName fullName, BirthDate birthDate, Email email,
                                   Phone phone, Document document, Boolean promotionNotificationsAllowed,
                                   Address address) {
     return new Customer(
@@ -48,24 +50,7 @@ public class Customer {
             address);
   }
 
-  public static Customer existingCustomer(CustomerId id, FullName fullName, BirthDate birthDate, Email email, Phone phone,
-                                          Document document, Boolean promotionNotificationsAllowed, OffsetDateTime registeredAt,
-                                          Boolean archived, OffsetDateTime archivedAt, LoyaltPoints loyaltyPoints, Address address) {
-    return new Customer(
-            id,
-            fullName,
-            birthDate,
-            email,
-            phone,
-            document,
-            promotionNotificationsAllowed,
-            registeredAt,
-            archived,
-            archivedAt,
-            loyaltyPoints,
-            address);
-  }
-
+  @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existingCustomer")
   private Customer(CustomerId id, FullName fullName, BirthDate birthDate, Email email, Phone phone,
                   Document document, Boolean promotionNotificationsAllowed, OffsetDateTime registeredAt,
                   Boolean archived, OffsetDateTime archivedAt, LoyaltPoints loyaltyPoints, Address address) {
