@@ -213,6 +213,7 @@ public class Customer {
   }
 
   private void setLoyaltyPoints(LoyaltPoints loyaltyPoints) {
+    Objects.requireNonNull(loyaltyPoints);
     this.loyaltyPoints = loyaltyPoints;
   }
 
