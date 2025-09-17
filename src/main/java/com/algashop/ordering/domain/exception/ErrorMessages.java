@@ -13,5 +13,10 @@ public class ErrorMessages {
   public static final String ERROR_CUSTOMER_ARCHIVED = "Customer is already archived";
   public static final String VALIDATION_ERROR_PHONE_IS_BLANK = "Phone cannot be blank";
   public static final String VALIDATION_ERROR_PHONE_IS_NULL = "Phone cannot be null";
+  public static final String VALIDATION_ERROR_MONEY_IS_NULL = "Money cannot be null";
+  public static final String VALIDATION_ERROR_PRODUCT_IS_NULL = "ProductName cannot be null";
+  public static final String VALIDATION_ERROR_PRODUCT_IS_BLANK = "ProductName cannot be blank";
+  public static final String VALIDATION_ERROR_QUANTITY_MUST_ZERO_POSITIVE = "Quantity must be a zero ou positive";
+  public static final String VALIDATION_ERROR_QUANTITY_MUST_POSITIVE = "Quantity must be a positive";
 
 }
