@@ -4,9 +4,11 @@ import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.enums.PaymentMethod;
 import com.algashop.ordering.domain.valueobject.BillingInfo;
 import com.algashop.ordering.domain.valueobject.Money;
+import com.algashop.ordering.domain.valueobject.ProductName;
 import com.algashop.ordering.domain.valueobject.Quantity;
 import com.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.valueobject.id.OrderId;
+import com.algashop.ordering.domain.valueobject.id.ProductId;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -37,6 +39,64 @@ public class Order {
   private LocalDate expectedDeliveryDate;
 
   private Set<OrderItem> items;
+
+  @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existing")
+  private Order(OrderId id, CustomerId customerId, Money totalAmount,
+                Quantity totalItems, OffsetDateTime placedAt, OffsetDateTime paidAt,
+                OffsetDateTime canceledAt, OffsetDateTime readyAt, BillingInfo billing,
+                BillingInfo shipping, OrderStatus status, PaymentMethod paymentMethod,
+                Money shippingCost, LocalDate expectedDeliveryDate, Set<OrderItem> items) {
+    this.setId(id);
+    this.setCustomerId(customerId);
+    this.setTotalAmount(totalAmount);
+    this.setTotalItems(totalItems);
+    this.setPlacedAt(placedAt);
+    this.setPaidAt(paidAt);
+    this.setCanceledAt(canceledAt);
+    this.setReadyAt(readyAt);
+    this.setBilling(billing);
+    this.setShipping(shipping);
+    this.setStatus(status);
+    this.setPaymentMethod(paymentMethod);
+    this.setShippingCost(shippingCost);
+    this.setExpectedDeliveryDate(expectedDeliveryDate);
+    this.setItems(items);
+  }
+
+  public static Order draft(CustomerId customerId) {
+    return new Order(
+            new OrderId(),
+            customerId,
+            Money.ZERO,
+            Quantity.ZERO,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            OrderStatus.DRAFT,
+            null,
+            null,
+            null,
+            new HashSet<>()
+    );
+  }
+
+  public void addItem(ProductId productId, ProductName productName, Money price, Quantity quantity) {
+    OrderItem orderItem = OrderItem.brandNew()
+            .orderId(this.id())
+            .productId(productId)
+            .productName(productName)
+            .price(price)
+            .quantity(quantity)
+            .build();
+
+    if (items == null) {
+      items = new HashSet<>();
+    }
+    this.items.add(orderItem);
+  }
 
   public OrderId id() {
     return id;
@@ -162,49 +222,6 @@ public class Order {
   private void setItems(Set<OrderItem> items) {
     Objects.requireNonNull(items);
     this.items = items;
-  }
-
-  @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existing")
-  private Order(OrderId id, CustomerId customerId, Money totalAmount,
-               Quantity totalItems, OffsetDateTime placedAt, OffsetDateTime paidAt,
-               OffsetDateTime canceledAt, OffsetDateTime readyAt, BillingInfo billing,
-               BillingInfo shipping, OrderStatus status, PaymentMethod paymentMethod,
-               Money shippingCost, LocalDate expectedDeliveryDate, Set<OrderItem> items) {
-    this.setId(id);
-    this.setCustomerId(customerId);
-    this.setTotalAmount(totalAmount);
-    this.setTotalItems(totalItems);
-    this.setPlacedAt(placedAt);
-    this.setPaidAt(paidAt);
-    this.setCanceledAt(canceledAt);
-    this.setReadyAt(readyAt);
-    this.setBilling(billing);
-    this.setShipping(shipping);
-    this.setStatus(status);
-    this.setPaymentMethod(paymentMethod);
-    this.setShippingCost(shippingCost);
-    this.setExpectedDeliveryDate(expectedDeliveryDate);
-    this.setItems(items);
-  }
-
-  public static Order draft(CustomerId customerId) {
-    return new Order(
-            new OrderId(),
-            customerId,
-            Money.ZERO,
-            Quantity.ZERO,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            OrderStatus.DRAFT,
-            null,
-            null,
-            null,
-            new HashSet<>()
-    );
   }
 
   @Override

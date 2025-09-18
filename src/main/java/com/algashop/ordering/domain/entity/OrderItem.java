@@ -23,6 +23,33 @@ public class OrderItem {
 
   private Money totalAmount;
 
+  @Builder(builderClassName = "existingOrderItem", builderMethodName = "existing")
+  private OrderItem(OrderItemId id, OrderId orderId, ProductId productId,
+                   ProductName productName, Money price, Quantity quantity,
+                   Money totalAmount) {
+    this.setId(id);
+    this.setOrderId(orderId);
+    this.setProductId(productId);
+    this.setProductName(productName);
+    this.setPrice(price);
+    this.setQuantity(quantity);
+    this.setTotalAmount(totalAmount);
+  }
+
+  @Builder(builderClassName = "brandNewOrderItemBuilder", builderMethodName = "brandNew")
+  private static OrderItem createBrandNew(OrderId orderId, ProductId productId,
+                                          ProductName productName, Money price, Quantity quantity) {
+    return new OrderItem(
+            new OrderItemId(),
+            orderId,
+            productId,
+            productName,
+            price,
+            quantity,
+            Money.ZERO
+    );
+  }
+
   public OrderItemId id() {
     return id;
   }
@@ -84,33 +111,6 @@ public class OrderItem {
   private void setTotalAmount(Money totalAmount) {
     Objects.requireNonNull(totalAmount);
     this.totalAmount = totalAmount;
-  }
-
-  @Builder(builderClassName = "existingOrderItem", builderMethodName = "existing")
-  public OrderItem(OrderItemId id, OrderId orderId, ProductId productId,
-                   ProductName productName, Money price, Quantity quantity,
-                   Money totalAmount) {
-    this.setId(id);
-    this.setOrderId(orderId);
-    this.setProductId(productId);
-    this.setProductName(productName);
-    this.setPrice(price);
-    this.setQuantity(quantity);
-    this.setTotalAmount(totalAmount);
-  }
-
-  @Builder(builderClassName = "brandNewOrderItemBuilder", builderMethodName = "brandNew")
-  private static OrderItem createBrandNew(OrderId orderId, ProductId productId,
-                   ProductName productName, Money price, Quantity quantity) {
-    return new OrderItem(
-            new OrderItemId(),
-            orderId,
-            productId,
-            productName,
-            price,
-            quantity,
-            Money.ZERO
-    );
   }
 
   @Override
