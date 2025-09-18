@@ -2,7 +2,7 @@ package com.algashop.ordering.domain.entity;
 
 import com.algashop.ordering.domain.valueobject.Address;
 import com.algashop.ordering.domain.valueobject.BirthDate;
-import com.algashop.ordering.domain.valueobject.CustomerId;
+import com.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.valueobject.Document;
 import com.algashop.ordering.domain.valueobject.Email;
 import com.algashop.ordering.domain.valueobject.FullName;

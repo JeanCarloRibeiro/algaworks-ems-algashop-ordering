@@ -2,9 +2,6 @@ package com.algashop.ordering.domain.entity;
 
 import com.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.algashop.ordering.domain.valueobject.Address;
-import com.algashop.ordering.domain.valueobject.BirthDate;
-import com.algashop.ordering.domain.valueobject.CustomerId;
-import com.algashop.ordering.domain.valueobject.Document;
 import com.algashop.ordering.domain.valueobject.Email;
 import com.algashop.ordering.domain.valueobject.FullName;
 import com.algashop.ordering.domain.valueobject.LoyaltPoints;
@@ -12,9 +9,6 @@ import com.algashop.ordering.domain.valueobject.Phone;
 import com.algashop.ordering.domain.valueobject.Zipcode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
