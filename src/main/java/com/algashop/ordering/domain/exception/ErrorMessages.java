@@ -19,4 +19,6 @@ public class ErrorMessages {
   public static final String VALIDATION_ERROR_QUANTITY_MUST_ZERO_POSITIVE = "Quantity must be a zero ou positive";
   public static final String VALIDATION_ERROR_QUANTITY_MUST_POSITIVE = "Quantity must be a positive";
 
+  public static final String ERROR_ORDER_STATUS_CANNOT_BE_CHANGED = "Cannot change order %s status from %s to %s";
+
 }
