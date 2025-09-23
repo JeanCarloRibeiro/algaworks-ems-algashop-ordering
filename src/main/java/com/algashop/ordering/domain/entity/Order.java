@@ -2,11 +2,13 @@ package com.algashop.ordering.domain.entity;
 
 import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.enums.PaymentMethod;
+import com.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.algashop.ordering.domain.valueobject.BillingInfo;
 import com.algashop.ordering.domain.valueobject.Money;
 import com.algashop.ordering.domain.valueobject.ProductName;
 import com.algashop.ordering.domain.valueobject.Quantity;
+import com.algashop.ordering.domain.valueobject.ShippingInfo;
 import com.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.valueobject.id.OrderId;
 import com.algashop.ordering.domain.valueobject.id.ProductId;
@@ -33,7 +35,7 @@ public class Order {
   private OffsetDateTime readyAt;
 
   private BillingInfo billing;
-  private BillingInfo shipping;
+  private ShippingInfo shipping;
 
   private OrderStatus status;
   private PaymentMethod paymentMethod;
@@ -47,7 +49,7 @@ public class Order {
   private Order(OrderId id, CustomerId customerId, Money totalAmount,
                 Quantity totalItems, OffsetDateTime placedAt, OffsetDateTime paidAt,
                 OffsetDateTime canceledAt, OffsetDateTime readyAt, BillingInfo billing,
-                BillingInfo shipping, OrderStatus status, PaymentMethod paymentMethod,
+                ShippingInfo shipping, OrderStatus status, PaymentMethod paymentMethod,
                 Money shippingCost, LocalDate expectedDeliveryDate, Set<OrderItem> items) {
     this.setId(id);
     this.setCustomerId(customerId);
@@ -107,12 +109,36 @@ public class Order {
     this.changeStatus(OrderStatus.PLACED);
   }
 
-  private void changeStatus(OrderStatus newStatus) {
+  public void changeStatus(OrderStatus newStatus) {
     Objects.requireNonNull(newStatus);
     if (this.status().canNotChangeTo(newStatus)) {
       throw new OrderStatusCannotBeChangedException(this.id, this.status(), newStatus);
     }
     this.setStatus(newStatus);
+  }
+
+  public void changePaymentMethod(PaymentMethod paymentMethod) {
+    Objects.requireNonNull(paymentMethod);
+    this.setPaymentMethod(paymentMethod);
+  }
+
+  public void changeBilling(BillingInfo billing) {
+    Objects.requireNonNull(billing);
+    this.setBilling(billing);
+  }
+
+  public void changeShipping(ShippingInfo shipping, Money shippingCost, LocalDate expectedDeliveryDate) {
+    Objects.requireNonNull(shipping);
+    Objects.requireNonNull(shippingCost);
+    Objects.requireNonNull(expectedDeliveryDate);
+
+    if (expectedDeliveryDate.isBefore(LocalDate.now())) {
+      throw new OrderInvalidShippingDeliveryDateException(this.id());
+    }
+
+    this.setShipping(shipping);
+    this.setShippingCost(shippingCost);
+    this.setExpectedDeliveryDate(expectedDeliveryDate);
   }
 
   public boolean isDraft() {
@@ -159,7 +185,7 @@ public class Order {
     return billing;
   }
 
-  public BillingInfo shipping() {
+  public ShippingInfo shipping() {
     return shipping;
   }
 
@@ -244,7 +270,7 @@ public class Order {
     this.billing = billing;
   }
 
-  private void setShipping(BillingInfo shipping) {
+  private void setShipping(ShippingInfo shipping) {
     this.shipping = shipping;
   }
 
