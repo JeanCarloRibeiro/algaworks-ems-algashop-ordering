@@ -1,5 +1,6 @@
 package com.algashop.ordering.domain.entity;
 
+import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.enums.PaymentMethod;
 import com.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
@@ -97,17 +98,25 @@ class OrderTest {
 
   @Test
   void givenDraftOrderWhenPlaceShouldChanceToPlaced() {
-    Order order = Order.draft(new CustomerId());
+    Order order = OrderTestDataBuilder.Order().build();
     order.place();
     Assertions.assertThat(order.isPlaced()).isTrue();
   }
 
   @Test
   void givenPlacedOrderWhenTryToPlaceGenerateException() {
-    Order order = Order.draft(new CustomerId());
-    order.place();
+    Order order = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PLACED).build();
+
     Assertions.assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
             .isThrownBy(order::place);
+  }
+
+  @Test
+  void givenPlacedOrderWhenPaidShouldChangeToPaid() {
+    Order order = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PLACED).build();
+    order.paid();
+    Assertions.assertThat(order.status()).isEqualTo(OrderStatus.PAID);
+    Assertions.assertThat(order.paidAt()).isNotNull();
   }
 
   @Test
