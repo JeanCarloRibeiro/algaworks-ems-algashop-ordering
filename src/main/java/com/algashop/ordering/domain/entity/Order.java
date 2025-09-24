@@ -106,15 +106,7 @@ public class Order {
   }
 
   public void place() {
-    Objects.requireNonNull(this.shipping());
-    Objects.requireNonNull(this.billing());
-    Objects.requireNonNull(this.shippingCost());
-    Objects.requireNonNull(this.expectedDeliveryDate());
-    Objects.requireNonNull(this.paymentMethod());
-    Objects.requireNonNull(this.items());
-    if (this.items().isEmpty()) {
-      throw new OrderCannotBePlacedException(this.id());
-    }
+    this.verifyIfCanBeChangedToPlaced();
     this.changeStatus(OrderStatus.PLACED);
   }
 
@@ -246,6 +238,28 @@ public class Order {
 
     this.setTotalAmount(new Money(totalAmount));
     this.setTotalItems(new Quantity(totalItemsQuantity));
+  }
+
+  private void verifyIfCanBeChangedToPlaced() {
+    if (this.shipping() == null) {
+      throw OrderCannotBePlacedException.noShippingInfo(this.id());
+    }
+    if (this.billing() == null) {
+      throw OrderCannotBePlacedException.noBillingInfo(this.id());
+    }
+    if (this.items().isEmpty()) {
+      throw OrderCannotBePlacedException.noItems(this.id());
+    }
+    if (this.shippingCost() == null) {
+      throw OrderCannotBePlacedException.noShippingCost(this.id());
+    }
+    if (this.expectedDeliveryDate() == null) {
+      throw OrderCannotBePlacedException.invalidExpectedDeliveryDate(this.id());
+    }
+    if (this.paymentMethod() == null) {
+      throw OrderCannotBePlacedException.noPaymentMethod(this.id());
+    }
+
   }
 
   private void setId(OrderId id) {
