@@ -2,6 +2,7 @@ package com.algashop.ordering.domain.entity;
 
 import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.enums.PaymentMethod;
+import com.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
 import com.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.algashop.ordering.domain.valueobject.Address;
@@ -15,6 +16,7 @@ import com.algashop.ordering.domain.valueobject.Quantity;
 import com.algashop.ordering.domain.valueobject.ShippingInfo;
 import com.algashop.ordering.domain.valueobject.Zipcode;
 import com.algashop.ordering.domain.valueobject.id.CustomerId;
+import com.algashop.ordering.domain.valueobject.id.OrderItemId;
 import com.algashop.ordering.domain.valueobject.id.ProductId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -226,6 +228,44 @@ class OrderTest {
 
     Assertions.assertThatExceptionOfType(OrderInvalidShippingDeliveryDateException.class)
             .isThrownBy(() -> order.changeShipping(shipping, shippingCost, expectedDeliveryDate));
+  }
+
+  @Test
+  void givenDraftOrderWhenChangeItemQuantityShouldRecalculate() {
+    Order order = Order.draft(new CustomerId());
+
+    ProductId productId = new ProductId();
+
+    order.addItem(
+            productId,
+            new ProductName("Mouse pad"),
+            new Money("100"),
+            new Quantity(1)
+    );
+    OrderItem orderItemId = order.items().iterator().next();
+    order.changeItemQuantity(orderItemId.id(), new Quantity(5));
+
+    Assertions.assertWith(order,
+            o -> Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("500")),
+            o -> Assertions.assertThat(order.totalItems()).isEqualTo(new Quantity(5))
+    );
+
+  }
+
+  @Test
+  void givenDraftOrderWhenChangeItemQuantityShouldRecalculate2() {
+    Order order = Order.draft(new CustomerId());
+
+    ProductId productId = new ProductId();
+
+    order.addItem(
+            productId,
+            new ProductName("Mouse pad"),
+            new Money("100"),
+            new Quantity(1)
+    );
+    Assertions.assertThatExceptionOfType(OrderDoesNotContainOrderItemException.class)
+            .isThrownBy(() -> order.changeItemQuantity(new OrderItemId(), new Quantity(5)));
   }
 
 }

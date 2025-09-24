@@ -53,6 +53,12 @@ public class OrderItem {
     return orderItem;
   }
 
+  void changeQuantity(Quantity quantity) {
+    Objects.requireNonNull(quantity);
+    this.setQuantity(quantity);
+    this.recalculateTotals();
+  }
+
   private void recalculateTotals() {
     this.setTotalAmount(this.price().multiply(this.quantity()));
   }
@@ -131,5 +137,4 @@ public class OrderItem {
   public int hashCode() {
     return Objects.hash(id);
   }
-
 }

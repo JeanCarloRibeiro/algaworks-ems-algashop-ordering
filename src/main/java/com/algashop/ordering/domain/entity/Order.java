@@ -3,6 +3,7 @@ package com.algashop.ordering.domain.entity;
 import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.enums.PaymentMethod;
 import com.algashop.ordering.domain.exception.OrderCannotBePlacedException;
+import com.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
 import com.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.algashop.ordering.domain.valueobject.BillingInfo;
@@ -12,6 +13,7 @@ import com.algashop.ordering.domain.valueobject.Quantity;
 import com.algashop.ordering.domain.valueobject.ShippingInfo;
 import com.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.valueobject.id.OrderId;
+import com.algashop.ordering.domain.valueobject.id.OrderItemId;
 import com.algashop.ordering.domain.valueobject.id.ProductId;
 import lombok.Builder;
 
@@ -21,6 +23,7 @@ import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 public class Order {
@@ -147,6 +150,16 @@ public class Order {
     this.setExpectedDeliveryDate(expectedDeliveryDate);
   }
 
+  public void changeItemQuantity(OrderItemId orderItemId, Quantity quantity) {
+    Objects.requireNonNull(orderItemId);
+    Objects.requireNonNull(quantity);
+
+    OrderItem orderItem = findOrderItemId(orderItemId);
+    orderItem.changeQuantity(quantity);
+
+    this.recalculateTotals();
+  }
+
   public boolean isDraft() {
     return OrderStatus.DRAFT.equals(this.status());
   }
@@ -260,6 +273,11 @@ public class Order {
       throw OrderCannotBePlacedException.noPaymentMethod(this.id());
     }
 
+  }
+
+  private OrderItem findOrderItemId(OrderItemId orderItemId) {
+    return this.items().stream().filter(i -> i.id().equals(orderItemId)).findFirst()
+            .orElseThrow(() -> new OrderDoesNotContainOrderItemException(this.id(), orderItemId));
   }
 
   private void setId(OrderId id) {
