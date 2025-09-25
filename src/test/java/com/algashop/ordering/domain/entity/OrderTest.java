@@ -5,6 +5,7 @@ import com.algashop.ordering.domain.enums.PaymentMethod;
 import com.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
 import com.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
+import com.algashop.ordering.domain.exception.ProductOutOfStockException;
 import com.algashop.ordering.domain.valueobject.Address;
 import com.algashop.ordering.domain.valueobject.Billing;
 import com.algashop.ordering.domain.valueobject.Document;
@@ -20,6 +21,7 @@ import com.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.valueobject.id.OrderItemId;
 import com.algashop.ordering.domain.valueobject.id.ProductId;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -218,6 +220,18 @@ class OrderTest {
 
     Assertions.assertThatExceptionOfType(OrderDoesNotContainOrderItemException.class)
             .isThrownBy(() -> order.changeItemQuantity(new OrderItemId(), new Quantity(5)));
+  }
+
+  @Test
+  void givenProductOutOfStockWhenTryToAddAnOrderShoudReturnNotAllow() {
+    Order order = Order.draft(new CustomerId());
+
+    Product product = ProductTestDataBuilder.productUnavailable().build();
+
+    ThrowableAssert.ThrowingCallable callable = () -> order.addItem(product, new Quantity(1));
+    Assertions.assertThatExceptionOfType(ProductOutOfStockException.class)
+            .isThrownBy(callable);
+
   }
 
 }
