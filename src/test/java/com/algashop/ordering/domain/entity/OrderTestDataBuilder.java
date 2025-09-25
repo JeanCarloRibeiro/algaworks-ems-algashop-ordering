@@ -3,14 +3,15 @@ package com.algashop.ordering.domain.entity;
 import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.enums.PaymentMethod;
 import com.algashop.ordering.domain.valueobject.Address;
-import com.algashop.ordering.domain.valueobject.BillingInfo;
+import com.algashop.ordering.domain.valueobject.Billing;
 import com.algashop.ordering.domain.valueobject.Document;
 import com.algashop.ordering.domain.valueobject.FullName;
 import com.algashop.ordering.domain.valueobject.Money;
 import com.algashop.ordering.domain.valueobject.Phone;
+import com.algashop.ordering.domain.valueobject.Product;
 import com.algashop.ordering.domain.valueobject.ProductName;
 import com.algashop.ordering.domain.valueobject.Quantity;
-import com.algashop.ordering.domain.valueobject.ShippingInfo;
+import com.algashop.ordering.domain.valueobject.Shipping;
 import com.algashop.ordering.domain.valueobject.Zipcode;
 import com.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.valueobject.id.ProductId;
@@ -21,10 +22,8 @@ public class OrderTestDataBuilder {
 
   private CustomerId customerId = new CustomerId();
   private PaymentMethod paymentMethod = PaymentMethod.GATEWAY_BALANCE;
-  private Money shippingCost = new Money("10");
-  private LocalDate expectedDeliveryDate = LocalDate.now().plusWeeks(1);
-  private ShippingInfo shippingInfo = shippingInfo();
-  private BillingInfo billingInfo = billingInfo();
+  private Shipping shipping = shipping();
+  private Billing billing = billing();
 
   private boolean withItems = true;
   private OrderStatus orderStatus = OrderStatus.DRAFT;
@@ -38,16 +37,16 @@ public class OrderTestDataBuilder {
 
   public Order build() {
     Order order = Order.draft(customerId);
-    order.changeShipping(shippingInfo, shippingCost, expectedDeliveryDate);
-    order.changeBilling(billingInfo);
+    order.changeShipping(shipping);
+    order.changeBilling(billing);
     order.changePaymentMethod(paymentMethod);
 
     if (withItems) {
-      order.addItem(new ProductId(), new ProductName("Notebook X11"),
-              new Money("3000"), new Quantity(2));
+      Product mouse = ProductTestDataBuilder.productAltMousePad().build();
+      order.addItem(mouse, new Quantity(2));
 
-      order.addItem(new ProductId(), new ProductName("Memory 16GB RAM"),
-              new Money("400"), new Quantity(1));
+      Product memory = ProductTestDataBuilder.productAltRamMemory().build();
+      order.addItem(memory, new Quantity(1));
     }
 
     switch (this.orderStatus) {
@@ -72,17 +71,15 @@ public class OrderTestDataBuilder {
     return order;
   }
 
-  public static ShippingInfo shippingInfo() {
-    return ShippingInfo.builder()
-            .address(address())
-            .fullName(new FullName("Jean Carlo", "Ribeiro"))
-            .document(new Document("255-08-0578"))
-            .phone(new Phone("478-256-2504"))
+  public static Shipping shipping() {
+    return Shipping.builder()
+            .cost(new Money("10"))
+            .expectedDate(LocalDate.now().plusWeeks(1))
             .build();
   }
 
-  public static BillingInfo billingInfo() {
-    return BillingInfo.builder()
+  public static Billing billing() {
+    return Billing.builder()
             .address(address())
             .document(new Document("255-08-0578"))
             .fullName(new FullName("Jean Carlo", "Ribeiro"))
@@ -112,23 +109,13 @@ public class OrderTestDataBuilder {
     return this;
   }
 
-  public OrderTestDataBuilder shippingCost(Money shippingCost) {
-    this.shippingCost = shippingCost;
+  public OrderTestDataBuilder shipping(Shipping shippingInfo) {
+    this.shipping = shippingInfo;
     return this;
   }
 
-  public OrderTestDataBuilder expectedDeliveryDate(LocalDate expectedDeliveryDate) {
-    this.expectedDeliveryDate = expectedDeliveryDate;
-    return this;
-  }
-
-  public OrderTestDataBuilder shippingInfo(ShippingInfo shippingInfo) {
-    this.shippingInfo = shippingInfo;
-    return this;
-  }
-
-  public OrderTestDataBuilder billingInfo(BillingInfo billingInfo) {
-    this.billingInfo = billingInfo;
+  public OrderTestDataBuilder billing(Billing billingInfo) {
+    this.billing = billingInfo;
     return this;
   }
 

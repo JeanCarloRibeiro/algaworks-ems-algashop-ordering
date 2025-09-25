@@ -1,6 +1,7 @@
 package com.algashop.ordering.domain.entity;
 
 import com.algashop.ordering.domain.valueobject.Money;
+import com.algashop.ordering.domain.valueobject.Product;
 import com.algashop.ordering.domain.valueobject.ProductName;
 import com.algashop.ordering.domain.valueobject.Quantity;
 import com.algashop.ordering.domain.valueobject.id.OrderId;
@@ -12,18 +13,18 @@ class OrderItemTest {
 
   @Test
   void shouldGenerate() {
+    Product product = ProductTestDataBuilder.productAltMousePad().build();
+
     OrderItem orderItem = OrderItem.brandNew()
             .orderId(new OrderId())
-            .productId(new ProductId())
-            .productName(new ProductName("Mouse pad"))
+            .product(product)
             .quantity(new Quantity(1))
-            .price(new Money("100"))
             .build();
 
     Assertions.assertThat(orderItem.orderId()).isNotNull();
     Assertions.assertWith(orderItem,
             o -> Assertions.assertThat(o.orderId().value()).isNotNull(),
-            o -> Assertions.assertThat(o.productName().value()).isEqualTo("Mouse pad")
+            o -> Assertions.assertThat(o.productName().value()).isEqualTo("Mouse Pad")
     );
   }
 

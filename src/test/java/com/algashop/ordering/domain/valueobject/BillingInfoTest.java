@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class BillingInfoTest {
   @Test
   void shouldGenerateWithValue() {
-    BillingInfo billingInfo = BillingInfo.builder()
+    Billing billingInfo = Billing.builder()
             .fullName(new FullName("Jean Carlo", "Ribeiro"))
             .document(new Document("255-08-0578"))
             .phone(new Phone("478-256-2504"))
