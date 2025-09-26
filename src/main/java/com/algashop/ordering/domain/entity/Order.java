@@ -105,6 +105,17 @@ public class Order {
     this.recalculateTotals();
   }
 
+  public void removeItem(OrderItemId orderItemId) {
+    verifyIfChangeable();
+    Objects.requireNonNull(orderItemId);
+
+    OrderItem orderItem = findOrderItemId(orderItemId);
+    boolean removed = this.items.removeIf(i -> i.equals(orderItem));
+    if (removed) {
+      this.recalculateTotals();
+    }
+  }
+
   public void place() {
     this.verifyIfCanBeChangedToPlaced();
     this.changeStatus(OrderStatus.PLACED);
