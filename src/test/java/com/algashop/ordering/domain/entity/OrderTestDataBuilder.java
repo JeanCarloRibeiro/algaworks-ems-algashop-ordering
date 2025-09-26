@@ -58,7 +58,7 @@ public class OrderTestDataBuilder {
       }
       case PAID -> {
         order.place();
-        order.paid();
+        order.markAsPaid();
       }
       case READY -> {
         // TODO Implement

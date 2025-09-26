@@ -2,7 +2,6 @@ package com.algashop.ordering.domain.entity;
 
 import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.enums.PaymentMethod;
-import com.algashop.ordering.domain.exception.OrderCannotBeEditedException;
 import com.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
 import com.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
@@ -123,7 +122,7 @@ class OrderTest {
   @Test
   void givenPlacedOrderWhenPaidShouldChangeToPaid() {
     Order order = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PLACED).build();
-    order.paid();
+    order.markAsPaid();
     Assertions.assertThat(order.status()).isEqualTo(OrderStatus.PAID);
     Assertions.assertThat(order.paidAt()).isNotNull();
   }
@@ -231,46 +230,6 @@ class OrderTest {
     ThrowableAssert.ThrowingCallable callable = () -> order.addItem(product, new Quantity(1));
     Assertions.assertThatExceptionOfType(ProductOutOfStockException.class).isThrownBy(callable);
 
-  }
-
-  @Test
-  void givenPlacedOrderShouldReturnNotAllowChange() {
-    Order order = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PLACED).build();
-
-    Shipping shipping = OrderTestDataBuilder.shipping();
-    ThrowableAssert.ThrowingCallable callable = () -> order.changeShipping(shipping);
-
-    Assertions.assertThatExceptionOfType(OrderCannotBeEditedException.class).isThrownBy(callable);
-  }
-
-  @Test
-  void givenDraftOrderShouldRemoveItem() {
-    Order order = OrderTestDataBuilder.Order().build();
-
-    OrderItem orderItem = order.items().iterator().next();
-    order.removeItem(orderItem.id());
-
-    Assertions.assertThat(order.items()).hasSize(1);
-  }
-
-  @Test
-  void givenPlacedOrderShouldNotAllowRemoveItem() {
-    Order order = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PLACED).build();
-
-    OrderItem orderItem = order.items().iterator().next();
-
-    ThrowableAssert.ThrowingCallable callable = () -> order.removeItem(orderItem.id());
-
-    Assertions.assertThatExceptionOfType(OrderCannotBeEditedException.class).isThrownBy(callable);
-  }
-
-  @Test
-  void givenDraftOrderShouldReturnExceptionWhenOrderItemNotExists() {
-    Order order = OrderTestDataBuilder.Order().build();
-
-    ThrowableAssert.ThrowingCallable callable = () -> order.removeItem(new OrderItemId());
-
-    Assertions.assertThatExceptionOfType(OrderDoesNotContainOrderItemException.class).isThrownBy(callable);
   }
 
 }

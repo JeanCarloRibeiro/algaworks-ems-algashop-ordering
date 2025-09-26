@@ -121,9 +121,14 @@ public class Order {
     this.changeStatus(OrderStatus.PLACED);
   }
 
-  public void paid() {
-    this.setPaidAt(OffsetDateTime.now());
+  public void markAsPaid() {
     this.changeStatus(OrderStatus.PAID);
+    this.setPaidAt(OffsetDateTime.now());
+  }
+
+  public void markAsReady() {
+    this.changeStatus(OrderStatus.READY);
+    this.setReadyAt(OffsetDateTime.now());
   }
 
   public void changeStatus(OrderStatus newStatus) {
