@@ -86,7 +86,7 @@ class OrderTest {
   }
 
   @Test
-  void givenDraftOrderWhenPlaceShouldChanceToPlaced() {
+  void givenDraftOrderWhenPlaceShouldChangeToPlaced() {
     Order order = OrderTestDataBuilder.Order().build();
     order.place();
     Assertions.assertThat(order.isPlaced()).isTrue();
@@ -116,7 +116,7 @@ class OrderTest {
   }
 
   @Test
-  void givenDraftOrderWhenChangeBillingInfoShouldAllowChange() {
+  void givenDraftOrderWhenChangeBillingShouldAllowChange() {
     Address address = Address.builder()
             .street("Bourbon Street")
             .number("1234")
@@ -148,46 +148,24 @@ class OrderTest {
   }
 
   @Test
-  void givenDraftOrderWhenChangeShippingInfoShouldAllowChange() {
-
-    Address address = Address.builder()
-            .street("Bourbon Street")
-            .number("1234")
-            .complement("House. 1")
-            .neighborhood("North Ville")
-            .city("Montfort")
-            .state("South Carolina")
-            .zipcode(new Zipcode("79911"))
-            .build();
-
-    Shipping shipping = Shipping.builder()
-            .cost(new Money("10"))
-            .expectedDate(LocalDate.now().plusWeeks(1))
-            //.address(address)
-            //.fullName(new FullName("Jean Carlo", "Ribeiro"))
-            //.document(new Document("255-08-0578"))
-            //.phone(new Phone("478-256-2504"))
-            .build();
+  void givenDraftOrderWhenChangeShippingShouldAllowChange() {
+    Shipping shipping = OrderTestDataBuilder.shipping();
 
     Order order = Order.draft(new CustomerId());
     order.changeShipping(shipping);
 
-    Shipping expectedShipping = Shipping.builder()
-            .cost(new Money("10"))
-            .expectedDate(LocalDate.now().plusWeeks(1))
-            .build();
-
-    Assertions.assertWith(order, o -> Assertions.assertThat(o.shipping()).isEqualTo(expectedShipping));
+    Assertions.assertWith(order, o -> Assertions.assertThat(o.shipping()).isEqualTo(shipping));
 
   }
 
   @Test
-  void givenDraftOrderAndDeliveryDateInThePastWhenChangeShippingInfoShouldNotAllowChange2() {
+  void givenDraftOrderAndDeliveryDateInThePastWhenChangeShippingShouldNotAllowChange2() {
     Order order = Order.draft(new CustomerId());
 
-    Shipping shipping = Shipping.builder()
-            .cost(new Money("10"))
-            .expectedDate(LocalDate.now().minusWeeks(1))
+    LocalDate expectedDate = LocalDate.now().minusWeeks(1);
+
+    Shipping shipping = OrderTestDataBuilder.shipping().toBuilder()
+            .expectedDate(expectedDate)
             .build();
 
     Assertions.assertThatExceptionOfType(OrderInvalidShippingDeliveryDateException.class)

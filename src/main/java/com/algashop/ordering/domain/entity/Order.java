@@ -137,6 +137,7 @@ public class Order {
       throw new OrderInvalidShippingDeliveryDateException(this.id());
     }
     this.setShipping(shipping);
+    this.recalculateTotals();
   }
 
   public void changeItemQuantity(OrderItemId orderItemId, Quantity quantity) {
@@ -222,7 +223,7 @@ public class Order {
             .reduce(0, Integer::sum);
 
     BigDecimal shippingCost;
-    if (this.shipping() == null || this.shipping().cost() == null) {
+    if (this.shipping() == null) {
       shippingCost = BigDecimal.ZERO;
     } else {
       shippingCost = this.shipping().cost().value();
@@ -242,12 +243,6 @@ public class Order {
     }
     if (this.items().isEmpty()) {
       throw OrderCannotBePlacedException.noItems(this.id());
-    }
-    if (this.shipping().cost() == null) {
-      throw OrderCannotBePlacedException.noShippingCost(this.id());
-    }
-    if (this.shipping().expectedDate() == null) {
-      throw OrderCannotBePlacedException.invalidExpectedDeliveryDate(this.id());
     }
     if (this.paymentMethod() == null) {
       throw OrderCannotBePlacedException.noPaymentMethod(this.id());

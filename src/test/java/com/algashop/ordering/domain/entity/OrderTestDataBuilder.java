@@ -9,12 +9,11 @@ import com.algashop.ordering.domain.valueobject.FullName;
 import com.algashop.ordering.domain.valueobject.Money;
 import com.algashop.ordering.domain.valueobject.Phone;
 import com.algashop.ordering.domain.valueobject.Product;
-import com.algashop.ordering.domain.valueobject.ProductName;
 import com.algashop.ordering.domain.valueobject.Quantity;
+import com.algashop.ordering.domain.valueobject.Recipient;
 import com.algashop.ordering.domain.valueobject.Shipping;
 import com.algashop.ordering.domain.valueobject.Zipcode;
 import com.algashop.ordering.domain.valueobject.id.CustomerId;
-import com.algashop.ordering.domain.valueobject.id.ProductId;
 
 import java.time.LocalDate;
 
@@ -75,6 +74,17 @@ public class OrderTestDataBuilder {
     return Shipping.builder()
             .cost(new Money("10"))
             .expectedDate(LocalDate.now().plusWeeks(1))
+            .recipient(recipient())
+            .address(address())
+            .build();
+  }
+
+  public static Shipping shippingAlt() {
+    return Shipping.builder()
+            .cost(new Money("20"))
+            .expectedDate(LocalDate.now().plusWeeks(2))
+            .recipient(recipientAlt())
+            .address(addressAlt())
             .build();
   }
 
@@ -99,6 +109,33 @@ public class OrderTestDataBuilder {
             .build();
   }
 
+  public static Address addressAlt() {
+    return Address.builder()
+            .street("Sansome Stree")
+            .number("755")
+            .neighborhood("Sansome")
+            .city("Montfort")
+            .state("South Carolina")
+            .zipcode(new Zipcode("08040"))
+            .build();
+  }
+
+  public static Recipient recipient() {
+    return Recipient.builder()
+            .document(new Document("255-08-0578"))
+            .fullName(new FullName("Jean Carlo", "Ribeiro"))
+            .phone(new Phone("478-256-2504"))
+            .build();
+  }
+
+  public static Recipient recipientAlt() {
+    return Recipient.builder()
+            .document(new Document("255-08-0578"))
+            .fullName(new FullName("Joao", "Silva"))
+            .phone(new Phone("478-300-2101"))
+            .build();
+  }
+
   public OrderTestDataBuilder customerId(CustomerId customerId) {
     this.customerId = customerId;
     return this;
@@ -109,13 +146,13 @@ public class OrderTestDataBuilder {
     return this;
   }
 
-  public OrderTestDataBuilder shipping(Shipping shippingInfo) {
-    this.shipping = shippingInfo;
+  public OrderTestDataBuilder shipping(Shipping shipping) {
+    this.shipping = shipping;
     return this;
   }
 
-  public OrderTestDataBuilder billing(Billing billingInfo) {
-    this.billing = billingInfo;
+  public OrderTestDataBuilder billing(Billing billing) {
+    this.billing = billing;
     return this;
   }
 
