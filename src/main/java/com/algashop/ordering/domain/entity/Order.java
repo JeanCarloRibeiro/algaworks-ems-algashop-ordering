@@ -2,6 +2,7 @@ package com.algashop.ordering.domain.entity;
 
 import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.enums.PaymentMethod;
+import com.algashop.ordering.domain.exception.OrderCannotBeCanceledException;
 import com.algashop.ordering.domain.exception.OrderCannotBeEditedException;
 import com.algashop.ordering.domain.exception.OrderCannotBePlacedException;
 import com.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
@@ -131,6 +132,14 @@ public class Order {
     this.setReadyAt(OffsetDateTime.now());
   }
 
+  public void cancel() {
+    if (isCanceled()) {
+      throw new OrderCannotBeCanceledException(this.id);
+    }
+    this.changeStatus(OrderStatus.CANCELED);
+    this.setCanceledAt(OffsetDateTime.now());
+  }
+
   public void changeStatus(OrderStatus newStatus) {
     Objects.requireNonNull(newStatus);
     if (this.status().canNotChangeTo(newStatus)) {
@@ -192,6 +201,10 @@ public class Order {
 
   public boolean isPaid() {
     return OrderStatus.PAID.equals(this.status());
+  }
+
+  public boolean isCanceled() {
+    return OrderStatus.CANCELED.equals(this.status());
   }
 
   public OrderId id() {
