@@ -2,6 +2,7 @@ package com.algashop.ordering.domain.entity;
 
 import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.enums.PaymentMethod;
+import com.algashop.ordering.domain.exception.OrderCannotBeEditedException;
 import com.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
 import com.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
@@ -228,8 +229,18 @@ class OrderTest {
     Product product = ProductTestDataBuilder.productUnavailable().build();
 
     ThrowableAssert.ThrowingCallable callable = () -> order.addItem(product, new Quantity(1));
-    Assertions.assertThatExceptionOfType(ProductOutOfStockException.class)
-            .isThrownBy(callable);
+    Assertions.assertThatExceptionOfType(ProductOutOfStockException.class).isThrownBy(callable);
+
+  }
+
+  @Test
+  void givenPlacedOrderShouldReturnNotAllowChange() {
+    Order order = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PLACED).build();
+
+    Shipping shipping = OrderTestDataBuilder.shipping();
+    ThrowableAssert.ThrowingCallable callable = () -> order.changeShipping(shipping);
+
+    Assertions.assertThatExceptionOfType(OrderCannotBeEditedException.class).isThrownBy(callable);
 
   }
 

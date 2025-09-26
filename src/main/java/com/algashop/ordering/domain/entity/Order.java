@@ -2,6 +2,7 @@ package com.algashop.ordering.domain.entity;
 
 import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.enums.PaymentMethod;
+import com.algashop.ordering.domain.exception.OrderCannotBeEditedException;
 import com.algashop.ordering.domain.exception.OrderCannotBePlacedException;
 import com.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
 import com.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
@@ -84,6 +85,8 @@ public class Order {
   }
 
   public void addItem(Product product, Quantity quantity) {
+    verifyIfChangeable();
+
     Objects.requireNonNull(product);
     Objects.requireNonNull(quantity);
 
@@ -121,16 +124,21 @@ public class Order {
   }
 
   public void changePaymentMethod(PaymentMethod paymentMethod) {
+    verifyIfChangeable();
+
     Objects.requireNonNull(paymentMethod);
     this.setPaymentMethod(paymentMethod);
   }
 
   public void changeBilling(Billing billing) {
+    verifyIfChangeable();
+
     Objects.requireNonNull(billing);
     this.setBilling(billing);
   }
 
   public void changeShipping(Shipping shipping) {
+    verifyIfChangeable();
     Objects.requireNonNull(shipping);
 
     if (shipping.expectedDate().isBefore(LocalDate.now())) {
@@ -141,6 +149,8 @@ public class Order {
   }
 
   public void changeItemQuantity(OrderItemId orderItemId, Quantity quantity) {
+    verifyIfChangeable();
+
     Objects.requireNonNull(orderItemId);
     Objects.requireNonNull(quantity);
 
@@ -148,6 +158,12 @@ public class Order {
     orderItem.changeQuantity(quantity);
 
     this.recalculateTotals();
+  }
+
+  public void verifyIfChangeable() {
+    if (!isDraft()) {
+      throw new OrderCannotBeEditedException(this.id(), this.status());
+    }
   }
 
   public boolean isDraft() {
