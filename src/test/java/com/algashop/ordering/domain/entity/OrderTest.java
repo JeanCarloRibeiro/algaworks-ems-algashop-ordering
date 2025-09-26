@@ -9,6 +9,7 @@ import com.algashop.ordering.domain.exception.ProductOutOfStockException;
 import com.algashop.ordering.domain.valueobject.Address;
 import com.algashop.ordering.domain.valueobject.Billing;
 import com.algashop.ordering.domain.valueobject.Document;
+import com.algashop.ordering.domain.valueobject.Email;
 import com.algashop.ordering.domain.valueobject.FullName;
 import com.algashop.ordering.domain.valueobject.Money;
 import com.algashop.ordering.domain.valueobject.Phone;
@@ -132,6 +133,7 @@ class OrderTest {
             .document(new Document("255-08-0578"))
             .fullName(new FullName("Jean Carlo", "Ribeiro"))
             .phone(new Phone("478-256-2504"))
+            .email(new Email("jean.ribeiro@gmail.com"))
             .build();
 
     Order order = Order.draft(new CustomerId());
@@ -142,6 +144,7 @@ class OrderTest {
             .document(new Document("255-08-0578"))
             .fullName(new FullName("Jean Carlo", "Ribeiro"))
             .phone(new Phone("478-256-2504"))
+            .email(new Email("jean.ribeiro@gmail.com"))
             .build();
 
     Assertions.assertThat(order.billing()).isEqualTo(expectedBilling);

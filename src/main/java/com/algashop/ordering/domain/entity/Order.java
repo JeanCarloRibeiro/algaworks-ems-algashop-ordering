@@ -236,10 +236,10 @@ public class Order {
 
   private void verifyIfCanBeChangedToPlaced() {
     if (this.shipping() == null) {
-      throw OrderCannotBePlacedException.noShippingInfo(this.id());
+      throw OrderCannotBePlacedException.noShipping(this.id());
     }
     if (this.billing() == null) {
-      throw OrderCannotBePlacedException.noBillingInfo(this.id());
+      throw OrderCannotBePlacedException.noBilling(this.id());
     }
     if (this.items().isEmpty()) {
       throw OrderCannotBePlacedException.noItems(this.id());

@@ -13,14 +13,14 @@ public class OrderCannotBePlacedException extends DomainException {
             String.format(ErrorMessages.ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_ITEMS, id));
   }
 
-  public static OrderCannotBePlacedException noShippingInfo(OrderId id) {
+  public static OrderCannotBePlacedException noShipping(OrderId id) {
     return new OrderCannotBePlacedException(
-            String.format(ErrorMessages.ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_SHIPPING_INFO, id));
+            String.format(ErrorMessages.ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_SHIPPING, id));
   }
 
-  public static OrderCannotBePlacedException noBillingInfo(OrderId id) {
+  public static OrderCannotBePlacedException noBilling(OrderId id) {
     return new OrderCannotBePlacedException(
-            String.format(ErrorMessages.ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_BILLING_INFO, id));
+            String.format(ErrorMessages.ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_BILLING, id));
   }
 
   public static OrderCannotBePlacedException noPaymentMethod(OrderId id) {
