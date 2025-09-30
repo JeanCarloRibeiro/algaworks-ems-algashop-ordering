@@ -1,5 +1,6 @@
-package com.algashop.ordering.domain.entity;
+package com.algashop.ordering.domain.entity.databuilder;
 
+import com.algashop.ordering.domain.entity.Order;
 import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.enums.PaymentMethod;
 import com.algashop.ordering.domain.valueobject.Address;

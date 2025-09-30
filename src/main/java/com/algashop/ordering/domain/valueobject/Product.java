@@ -6,13 +6,13 @@ import lombok.Builder;
 
 import java.util.Objects;
 
-@Builder
 public record Product(
         ProductId id,
         ProductName name,
         Money price,
         Boolean inStock) {
 
+  @Builder(toBuilder = true)
   public Product {
     Objects.requireNonNull(id);
     Objects.requireNonNull(name);

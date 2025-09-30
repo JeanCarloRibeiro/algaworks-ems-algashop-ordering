@@ -1,5 +1,6 @@
 package com.algashop.ordering.domain.entity;
 
+import com.algashop.ordering.domain.entity.databuilder.OrderTestDataBuilder;
 import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.exception.OrderCannotBeCanceledException;
 import org.assertj.core.api.Assertions;

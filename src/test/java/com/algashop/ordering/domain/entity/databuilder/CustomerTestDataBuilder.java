@@ -1,5 +1,6 @@
-package com.algashop.ordering.domain.entity;
+package com.algashop.ordering.domain.entity.databuilder;
 
+import com.algashop.ordering.domain.entity.Customer;
 import com.algashop.ordering.domain.valueobject.Address;
 import com.algashop.ordering.domain.valueobject.BirthDate;
 import com.algashop.ordering.domain.valueobject.id.CustomerId;

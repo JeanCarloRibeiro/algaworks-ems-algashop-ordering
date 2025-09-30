@@ -1,8 +1,8 @@
 package com.algashop.ordering.domain.factory;
 
 import com.algashop.ordering.domain.entity.Order;
-import com.algashop.ordering.domain.entity.OrderTestDataBuilder;
-import com.algashop.ordering.domain.entity.ProductTestDataBuilder;
+import com.algashop.ordering.domain.entity.databuilder.OrderTestDataBuilder;
+import com.algashop.ordering.domain.entity.databuilder.ProductTestDataBuilder;
 import com.algashop.ordering.domain.enums.PaymentMethod;
 import com.algashop.ordering.domain.valueobject.Billing;
 import com.algashop.ordering.domain.valueobject.Product;

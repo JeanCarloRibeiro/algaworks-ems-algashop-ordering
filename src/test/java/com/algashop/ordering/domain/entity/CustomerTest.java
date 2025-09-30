@@ -1,5 +1,6 @@
 package com.algashop.ordering.domain.entity;
 
+import com.algashop.ordering.domain.entity.databuilder.CustomerTestDataBuilder;
 import com.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.algashop.ordering.domain.valueobject.Address;
 import com.algashop.ordering.domain.valueobject.Email;

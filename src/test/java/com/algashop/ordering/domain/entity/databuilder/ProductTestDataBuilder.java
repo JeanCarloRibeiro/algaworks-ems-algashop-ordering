@@ -1,4 +1,4 @@
-package com.algashop.ordering.domain.entity;
+package com.algashop.ordering.domain.entity.databuilder;
 
 import com.algashop.ordering.domain.valueobject.Money;
 import com.algashop.ordering.domain.valueobject.Product;

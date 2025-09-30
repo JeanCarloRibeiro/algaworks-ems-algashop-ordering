@@ -1,5 +1,6 @@
 package com.algashop.ordering.domain.entity;
 
+import com.algashop.ordering.domain.entity.databuilder.ProductTestDataBuilder;
 import com.algashop.ordering.domain.valueobject.Product;
 import com.algashop.ordering.domain.valueobject.Quantity;
 import com.algashop.ordering.domain.valueobject.id.OrderId;

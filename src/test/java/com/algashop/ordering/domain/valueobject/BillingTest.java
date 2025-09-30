@@ -1,6 +1,6 @@
 package com.algashop.ordering.domain.valueobject;
 
-import com.algashop.ordering.domain.entity.OrderTestDataBuilder;
+import com.algashop.ordering.domain.entity.databuilder.OrderTestDataBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

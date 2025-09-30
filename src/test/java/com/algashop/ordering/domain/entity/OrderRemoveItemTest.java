@@ -1,5 +1,6 @@
 package com.algashop.ordering.domain.entity;
 
+import com.algashop.ordering.domain.entity.databuilder.OrderTestDataBuilder;
 import com.algashop.ordering.domain.enums.OrderStatus;
 import com.algashop.ordering.domain.exception.OrderCannotBeEditedException;
 import com.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
