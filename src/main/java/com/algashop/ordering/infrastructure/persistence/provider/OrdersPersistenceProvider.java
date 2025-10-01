@@ -3,6 +3,7 @@ package com.algashop.ordering.infrastructure.persistence.provider;
 import com.algashop.ordering.domain.model.entity.Order;
 import com.algashop.ordering.domain.model.repository.Orders;
 import com.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
 import com.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class OrdersPersistenceProvider implements Orders {
 
   private final OrderPersistenceEntityRepository persistenceRepository;
+  private final OrderPersistenceEntityAssembler assembler;
 
   @Override
   public Optional<Order> ofId(OrderId orderId) {
@@ -28,10 +30,7 @@ public class OrdersPersistenceProvider implements Orders {
 
   @Override
   public void add(Order aggregateRoot) {
-    OrderPersistenceEntity persistenceEntity = OrderPersistenceEntity.builder()
-            .id(aggregateRoot.id().value().toLong())
-            .customerId(aggregateRoot.customerId().value())
-            .build();
+    OrderPersistenceEntity persistenceEntity = assembler.fromDomain(aggregateRoot);
     persistenceRepository.saveAndFlush(persistenceEntity);
   }
 
