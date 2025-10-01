@@ -1,8 +1,8 @@
 package com.algashop.ordering.domain.model.entity;
 
 import com.algashop.ordering.domain.model.exception.ShoppingCartDoesNotContainItemException;
-import com.algashop.ordering.domain.model.valueobject.Product;
 import com.algashop.ordering.domain.model.valueobject.Money;
+import com.algashop.ordering.domain.model.valueobject.Product;
 import com.algashop.ordering.domain.model.valueobject.Quantity;
 import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
@@ -18,7 +18,7 @@ import java.util.Set;
 
 import static com.algashop.ordering.domain.model.exception.ErrorMessages.VALIDATION_ERROR_QUANTITY_MUST_POSITIVE;
 
-public class ShoppingCart {
+public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
 
   private ShoppingCartId id;
   private CustomerId customerId;

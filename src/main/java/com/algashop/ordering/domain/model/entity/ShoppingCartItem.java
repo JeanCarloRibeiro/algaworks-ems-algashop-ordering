@@ -1,8 +1,8 @@
 package com.algashop.ordering.domain.model.entity;
 
 import com.algashop.ordering.domain.model.exception.ShoppingCartItemIncompatibleProductException;
-import com.algashop.ordering.domain.model.valueobject.Product;
 import com.algashop.ordering.domain.model.valueobject.Money;
+import com.algashop.ordering.domain.model.valueobject.Product;
 import com.algashop.ordering.domain.model.valueobject.Quantity;
 import com.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
 import com.algashop.ordering.domain.model.valueobject.id.ShoppingCartItemId;
@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import static com.algashop.ordering.domain.model.exception.ErrorMessages.VALIDATION_ERROR_QUANTITY_MUST_POSITIVE;
 
-public class ShoppingCartItem {
+public class ShoppingCartItem implements AggregateRoot<ShoppingCartItemId> {
 
   private ShoppingCartItemId id;
   private ShoppingCartId shoppingCartId;
