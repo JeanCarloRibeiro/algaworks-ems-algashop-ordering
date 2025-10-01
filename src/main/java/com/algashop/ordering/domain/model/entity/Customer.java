@@ -3,13 +3,12 @@ package com.algashop.ordering.domain.model.entity;
 import com.algashop.ordering.domain.model.exception.CustomerArchivedException;
 import com.algashop.ordering.domain.model.valueobject.Address;
 import com.algashop.ordering.domain.model.valueobject.BirthDate;
-import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.model.valueobject.Document;
 import com.algashop.ordering.domain.model.valueobject.Email;
 import com.algashop.ordering.domain.model.valueobject.FullName;
 import com.algashop.ordering.domain.model.valueobject.LoyaltPoints;
 import com.algashop.ordering.domain.model.valueobject.Phone;
-import com.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import lombok.Builder;
 
 import java.time.OffsetDateTime;
