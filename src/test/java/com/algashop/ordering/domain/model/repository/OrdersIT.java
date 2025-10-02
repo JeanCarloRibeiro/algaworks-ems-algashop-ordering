@@ -4,6 +4,7 @@ import com.algashop.ordering.domain.model.entity.Order;
 import com.algashop.ordering.domain.model.entity.databuilder.OrderTestDataBuilder;
 import com.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
+import com.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceEntityDisassembler;
 import com.algashop.ordering.infrastructure.persistence.provider.OrdersPersistenceProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import({OrdersPersistenceProvider.class, OrderPersistenceEntityAssembler.class})
+@Import({OrdersPersistenceProvider.class, OrderPersistenceEntityAssembler.class,
+        OrderPersistenceEntityDisassembler.class
+})
 class OrdersIT {
 
-  private Orders orders;
+  private final Orders orders;
 
   @Autowired
   public OrdersIT(Orders orders) {
