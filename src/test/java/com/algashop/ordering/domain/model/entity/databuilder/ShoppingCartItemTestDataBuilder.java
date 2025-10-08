@@ -10,7 +10,7 @@ import com.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
 
 public class ShoppingCartItemTestDataBuilder {
 
-  public static ShoppingCartItem.brandNewShoppingCartItemBuild shoppingCartItem() {
+  public static ShoppingCartItem.BrandNewShoppingCartItem shoppingCartItem() {
     return ShoppingCartItem.brandNew()
             .shoppingCartId(new ShoppingCartId())
             .quantity(new Quantity(1))
@@ -23,7 +23,7 @@ public class ShoppingCartItemTestDataBuilder {
                     .build());
   }
 
-  public static ShoppingCartItem.brandNewShoppingCartItemBuild shoppingCartItemUnavailable() {
+  public static ShoppingCartItem.BrandNewShoppingCartItem shoppingCartItemUnavailable() {
     return ShoppingCartItem.brandNew()
             .shoppingCartId(new ShoppingCartId())
             .quantity(new Quantity(1))

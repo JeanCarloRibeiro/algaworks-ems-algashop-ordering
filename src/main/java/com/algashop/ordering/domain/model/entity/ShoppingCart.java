@@ -14,6 +14,7 @@ import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.algashop.ordering.domain.model.exception.ErrorMessages.VALIDATION_ERROR_QUANTITY_MUST_POSITIVE;
@@ -28,7 +29,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
 
   private Set<ShoppingCartItem> items;
 
-  @Builder(builderClassName = "existingShoppingCartBuilder", builderMethodName = "existing")
+  @Builder(builderClassName = "ExistingShoppingCartBuilder", builderMethodName = "existing")
   private ShoppingCart(ShoppingCartId id, CustomerId customerId, Money totalAmount,
                        Quantity totalItems, OffsetDateTime createdAt,
                        Set<ShoppingCartItem> items) {
@@ -58,23 +59,25 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
 
     product.checkOutOfStock();
 
-    try {
-      ShoppingCartItem shoppingCartItem = findShoppingCartItem(product);
-      this.changeItemQuantity(shoppingCartItem.id(), shoppingCartItem.quantity());
-      shoppingCartItem.refresh(product);
-    } catch (ShoppingCartDoesNotContainItemException e) {
-      ShoppingCartItem cartItem = ShoppingCartItem.brandNew()
-              .shoppingCartId(this.id())
-              .product(product)
-              .quantity(quantity)
-              .available(true)
-              .build();
+    Optional<ShoppingCartItem> shoppingCartItem = findItemOptional(product);
+    shoppingCartItem.ifPresentOrElse(
+            item -> {
+              this.changeItemQuantity(item.id(), quantity);
+              item.refresh(product);
+            }, () -> {
+              ShoppingCartItem cartItem = ShoppingCartItem.brandNew()
+                      .shoppingCartId(this.id())
+                      .product(product)
+                      .quantity(quantity)
+                      .available(true)
+                      .build();
 
-      if (items == null) {
-        items = new HashSet<>();
-      }
-      this.items.add(cartItem);
-    }
+              if (this.items() == null) {
+                items = new HashSet<>();
+              }
+              this.items.add(cartItem);
+            }
+    );
     this.recalculateTotals();
   }
 
@@ -85,7 +88,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
   }
 
   public void removeItem(ShoppingCartItemId cartItemId) {
-    ShoppingCartItem cartItem = findShoppingCartItem(cartItemId);
+    ShoppingCartItem cartItem = findItem(cartItemId);
     this.items.remove(cartItem);
     this.recalculateTotals();
   }
@@ -96,11 +99,17 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
   }
 
   public ShoppingCartItem findItem(ShoppingCartItemId id) {
-    return findShoppingCartItem(id);
+    return this.items().stream().filter(i -> i.id().equals(id)).findAny()
+            .orElseThrow(() -> new ShoppingCartDoesNotContainItemException(this.id()));
   }
 
   public ShoppingCartItem findItem(Product product) {
-    return findShoppingCartItem(product);
+    return this.items().stream().filter(i -> i.product().id().equals(product.id())).findAny()
+            .orElseThrow(() -> new ShoppingCartDoesNotContainItemException(this.id()));
+  }
+
+  private Optional<ShoppingCartItem> findItemOptional(Product product) {
+    return this.items().stream().filter(i -> i.product().id().equals(product.id())).findAny().stream().findFirst();
   }
 
   public void changeItemQuantity(ShoppingCartItemId id, Quantity quantity) {
@@ -110,14 +119,14 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
     if (quantity.value() <= 0) {
       throw new IllegalArgumentException(VALIDATION_ERROR_QUANTITY_MUST_POSITIVE);
     }
-    ShoppingCartItem shoppingCartItem = findShoppingCartItem(id);
+    ShoppingCartItem shoppingCartItem = findItem(id);
     shoppingCartItem.changeQuantity(quantity);
 
     this.recalculateTotals();
   }
 
   public Boolean containsUnavailableItems() {
-    return this.items().stream().iterator().next().available().equals(false);
+    return this.items().stream().anyMatch(i -> i.available().equals(false));
   }
 
   public ShoppingCartId id() {
@@ -157,16 +166,6 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
 
     this.setTotalAmount(new Money(totalItemsAmount));
     this.setTotalItems(new Quantity(totalItemsQuantity));
-  }
-
-  private ShoppingCartItem findShoppingCartItem(ShoppingCartItemId id) {
-    return this.items().stream().filter(i -> i.id().equals(id)).findFirst()
-            .orElseThrow(() -> new ShoppingCartDoesNotContainItemException(this.id()));
-  }
-
-  private ShoppingCartItem findShoppingCartItem(Product product) {
-    return this.items().stream().filter(i -> i.product().id().equals(product.id())).findFirst()
-            .orElseThrow(() -> new ShoppingCartDoesNotContainItemException(this.id()));
   }
 
   private void setId(ShoppingCartId id) {

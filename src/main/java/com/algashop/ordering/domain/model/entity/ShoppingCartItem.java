@@ -45,7 +45,7 @@ public class ShoppingCartItem implements AggregateRoot<ShoppingCartItemId> {
     return this.available;
   }
 
-  @Builder(builderClassName = "existingShoppingCartItem", builderMethodName = "existing")
+  @Builder(builderClassName = "ExistingShoppingCartItem", builderMethodName = "existing")
   private ShoppingCartItem(
           ShoppingCartItemId id, ShoppingCartId shoppingCartId,
           Product product, Quantity quantity, Money totalAmount,
@@ -58,10 +58,9 @@ public class ShoppingCartItem implements AggregateRoot<ShoppingCartItemId> {
     this.setAvailable(available);
   }
 
-  @Builder(builderClassName = "brandNewShoppingCartItemBuild", builderMethodName = "brandNew")
-  private static ShoppingCartItem createBrandNew(
-          ShoppingCartId shoppingCartId, Product product, Quantity quantity,
-          Boolean available) {
+  @Builder(builderClassName = "BrandNewShoppingCartItem", builderMethodName = "brandNew")
+  public static ShoppingCartItem createBrandNew(
+          ShoppingCartId shoppingCartId, Product product, Quantity quantity, Boolean available) {
 
     Objects.requireNonNull(shoppingCartId);
     Objects.requireNonNull(product);

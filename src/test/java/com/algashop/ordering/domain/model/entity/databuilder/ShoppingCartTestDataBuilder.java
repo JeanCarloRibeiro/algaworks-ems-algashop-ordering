@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class ShoppingCartTestDataBuilder {
 
-  public static ShoppingCart.existingShoppingCartBuilder shoppingCart() {
+  public static ShoppingCart.ExistingShoppingCartBuilder shoppingCart() {
     return ShoppingCart.existing()
             .id(new ShoppingCartId())
             .customerId(new CustomerId())
@@ -21,7 +21,7 @@ public class ShoppingCartTestDataBuilder {
             .items(Set.of(ShoppingCartItemTestDataBuilder.shoppingCartItem().build()));
   }
 
-  public static ShoppingCart.existingShoppingCartBuilder shoppingCartUnavailable() {
+  public static ShoppingCart.ExistingShoppingCartBuilder shoppingCartUnavailable() {
     return ShoppingCart.existing()
             .id(new ShoppingCartId())
             .customerId(new CustomerId())
