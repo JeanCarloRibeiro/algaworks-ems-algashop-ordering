@@ -69,4 +69,25 @@ class OrdersIT {
 
     Assertions.assertThat(order.isPaid()).isTrue();
   }
+
+  @Test
+  void shouldNotAllowedStaleUpdates() {
+    Order order = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PLACED).build();
+    orders.add(order);
+
+    Order order1 = orders.ofId(order.id()).orElseThrow();
+    Order order2 = orders.ofId(order.id()).orElseThrow();
+
+    order1.markAsPaid();
+    orders.add(order1);
+
+    order2.cancel();
+    orders.add(order2);
+
+    Order savedOrder = orders.ofId(order.id()).orElseThrow();
+
+    Assertions.assertThat(savedOrder.paidAt()).isNotNull();
+    Assertions.assertThat(savedOrder.canceledAt()).isNotNull();
+  }
+
 }
