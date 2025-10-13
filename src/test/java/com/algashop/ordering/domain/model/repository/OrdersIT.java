@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.Optional;
 
@@ -75,19 +76,16 @@ class OrdersIT {
     Order order = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PLACED).build();
     orders.add(order);
 
-    Order order1 = orders.ofId(order.id()).orElseThrow();
-    Order order2 = orders.ofId(order.id()).orElseThrow();
+    Order orderT1 = orders.ofId(order.id()).orElseThrow();
+    Order orderT2 = orders.ofId(order.id()).orElseThrow();
 
-    order1.markAsPaid();
-    orders.add(order1);
+    orderT1.markAsPaid();
+    orders.add(orderT1);
 
-    order2.cancel();
-    orders.add(order2);
+    orderT2.cancel();
 
-    Order savedOrder = orders.ofId(order.id()).orElseThrow();
-
-    Assertions.assertThat(savedOrder.paidAt()).isNotNull();
-    Assertions.assertThat(savedOrder.canceledAt()).isNotNull();
+    Assertions.assertThatExceptionOfType(ObjectOptimisticLockingFailureException.class)
+            .isThrownBy(() -> orders.add(orderT2));
   }
 
 }
