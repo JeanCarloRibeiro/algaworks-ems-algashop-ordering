@@ -3,11 +3,11 @@ package com.algashop.ordering.domain.model.entity;
 import com.algashop.ordering.domain.model.entity.databuilder.CustomerTestDataBuilder;
 import com.algashop.ordering.domain.model.exception.CustomerArchivedException;
 import com.algashop.ordering.domain.model.valueobject.Address;
-import com.algashop.ordering.domain.model.valueobject.Zipcode;
 import com.algashop.ordering.domain.model.valueobject.Email;
 import com.algashop.ordering.domain.model.valueobject.FullName;
 import com.algashop.ordering.domain.model.valueobject.LoyaltPoints;
 import com.algashop.ordering.domain.model.valueobject.Phone;
+import com.algashop.ordering.domain.model.valueobject.Zipcode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +55,7 @@ public class CustomerTest {
                             .neighborhood("North Ville")
                             .city("New York")
                             .state("South California")
-                            .zipcode(new Zipcode("12345"))
+                            .zipCode(new Zipcode("12345"))
                             .build()
             )
     );

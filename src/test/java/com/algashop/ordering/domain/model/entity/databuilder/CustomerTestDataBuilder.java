@@ -33,7 +33,7 @@ public class CustomerTestDataBuilder {
                     .neighborhood("North Ville")
                     .city("New York")
                     .state("South California")
-                    .zipcode(new Zipcode("12345"))
+                    .zipCode(new Zipcode("12345"))
                     .build());
   }
 
@@ -57,7 +57,7 @@ public class CustomerTestDataBuilder {
                     .neighborhood("North Ville")
                     .city("New York")
                     .state("South California")
-                    .zipcode(new Zipcode("12345"))
+                    .zipCode(new Zipcode("12345"))
                     .build());
   }
 
@@ -81,7 +81,7 @@ public class CustomerTestDataBuilder {
                     .neighborhood("North Ville")
                     .city("New York")
                     .state("South California")
-                    .zipcode(new Zipcode("12345"))
+                    .zipCode(new Zipcode("12345"))
                     .build());
   }
 

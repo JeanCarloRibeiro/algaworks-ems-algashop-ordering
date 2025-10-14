@@ -11,7 +11,7 @@ public record Address(String street,
                       String neighborhood,
                       String city,
                       String state,
-                      Zipcode zipcode) {
+                      Zipcode zipCode) {
 
   @Builder(toBuilder = true)
   public Address {
@@ -20,7 +20,7 @@ public record Address(String street,
     FieldValidations.requiresNonBlank(neighborhood);
     FieldValidations.requiresNonBlank(city);
     FieldValidations.requiresNonBlank(state);
-    Objects.requireNonNull(zipcode);
+    Objects.requireNonNull(zipCode);
   }
 
   @Override
@@ -31,6 +31,6 @@ public record Address(String street,
             ", neighborhood='" + neighborhood + '\'' +
             ", city='" + city + '\'' +
             ", state='" + state + '\'' +
-            ", zipcode=" + zipcode;
+            ", zipcode=" + zipCode;
   }
 }

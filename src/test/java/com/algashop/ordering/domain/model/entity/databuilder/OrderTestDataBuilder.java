@@ -109,7 +109,7 @@ public class OrderTestDataBuilder {
             .neighborhood("North Ville")
             .city("Montfort")
             .state("South Carolina")
-            .zipcode(new Zipcode("79911"))
+            .zipCode(new Zipcode("79911"))
             .complement("House. 1")
             .build();
   }
@@ -121,7 +121,7 @@ public class OrderTestDataBuilder {
             .neighborhood("Sansome")
             .city("Montfort")
             .state("South Carolina")
-            .zipcode(new Zipcode("08040"))
+            .zipCode(new Zipcode("08040"))
             .build();
   }
 
