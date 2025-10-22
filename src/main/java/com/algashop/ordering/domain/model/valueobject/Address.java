@@ -11,7 +11,7 @@ public record Address(String street,
                       String neighborhood,
                       String city,
                       String state,
-                      Zipcode zipCode) {
+                      ZipCode zipCode) {
 
   @Builder(toBuilder = true)
   public Address {

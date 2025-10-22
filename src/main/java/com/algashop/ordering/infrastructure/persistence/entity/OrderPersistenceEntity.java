@@ -4,20 +4,22 @@ import com.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbedd
 import com.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -25,14 +27,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @ToString(of = "id")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "\"order\"")
@@ -62,6 +64,32 @@ public class OrderPersistenceEntity {
 
   @Version
   private Long version;
+
+  @Builder
+  public OrderPersistenceEntity(Long id, UUID customerId, BigDecimal totalAmount, Integer totalItems,
+                                String status, String paymentMethod, OffsetDateTime placedAt, OffsetDateTime paidAt,
+                                OffsetDateTime canceledAt, OffsetDateTime readAt, UUID createdByUserId,
+                                OffsetDateTime lastModifiedAt, UUID lastModifiedByUserId, Long version,
+                                BillingEmbeddable billing, ShippingEmbeddable shipping,
+                                Set<OrderItemPersistenceEntity> items) {
+    this.id = id;
+    this.customerId = customerId;
+    this.totalAmount = totalAmount;
+    this.totalItems = totalItems;
+    this.status = status;
+    this.paymentMethod = paymentMethod;
+    this.placedAt = placedAt;
+    this.paidAt = paidAt;
+    this.canceledAt = canceledAt;
+    this.readAt = readAt;
+    this.createdByUserId = createdByUserId;
+    this.lastModifiedAt = lastModifiedAt;
+    this.lastModifiedByUserId = lastModifiedByUserId;
+    this.version = version;
+    this.billing = billing;
+    this.shipping = shipping;
+    this.replaceItems(items);
+  }
 
   @Embedded
   @AttributeOverrides({
@@ -96,5 +124,28 @@ public class OrderPersistenceEntity {
           @AttributeOverride(name = "address.zipCode", column = @Column(name = "shipping_address_zipCode"))
   })
   private ShippingEmbeddable shipping;
+
+  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<OrderItemPersistenceEntity> items = new HashSet<>();
+
+  public void replaceItems(Set<OrderItemPersistenceEntity> items) {
+    if (CollectionUtils.isEmpty(items)) {
+      this.setItems(new HashSet<>());
+      return;
+    }
+    items.forEach(i -> i.setOrder(this));
+    this.setItems(items);
+  }
+
+  public void addItem(OrderItemPersistenceEntity item) {
+    if (item == null) {
+      return;
+    }
+    if (this.getItems() == null) {
+      this.setItems(new HashSet<>());
+    }
+    item.setOrder(this);
+    this.getItems().add(item);
+  }
 
 }

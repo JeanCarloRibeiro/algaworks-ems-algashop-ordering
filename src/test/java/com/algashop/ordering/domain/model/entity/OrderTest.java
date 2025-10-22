@@ -19,7 +19,7 @@ import com.algashop.ordering.domain.model.valueobject.Product;
 import com.algashop.ordering.domain.model.valueobject.ProductName;
 import com.algashop.ordering.domain.model.valueobject.Quantity;
 import com.algashop.ordering.domain.model.valueobject.Shipping;
-import com.algashop.ordering.domain.model.valueobject.Zipcode;
+import com.algashop.ordering.domain.model.valueobject.ZipCode;
 import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.model.valueobject.id.OrderItemId;
 import com.algashop.ordering.domain.model.valueobject.id.ProductId;
@@ -144,7 +144,7 @@ class OrderTest {
             .neighborhood("North Ville")
             .city("Montfort")
             .state("South Carolina")
-            .zipCode(new Zipcode("79911"))
+            .zipCode(new ZipCode("79911"))
             .complement("House. 1")
             .build();
 

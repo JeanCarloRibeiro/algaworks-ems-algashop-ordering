@@ -8,7 +8,7 @@ import com.algashop.ordering.domain.model.valueobject.Email;
 import com.algashop.ordering.domain.model.valueobject.FullName;
 import com.algashop.ordering.domain.model.valueobject.LoyaltPoints;
 import com.algashop.ordering.domain.model.valueobject.Phone;
-import com.algashop.ordering.domain.model.valueobject.Zipcode;
+import com.algashop.ordering.domain.model.valueobject.ZipCode;
 import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 
 import java.time.LocalDate;
@@ -33,7 +33,7 @@ public class CustomerTestDataBuilder {
                     .neighborhood("North Ville")
                     .city("New York")
                     .state("South California")
-                    .zipCode(new Zipcode("12345"))
+                    .zipCode(new ZipCode("12345"))
                     .build());
   }
 
@@ -57,7 +57,7 @@ public class CustomerTestDataBuilder {
                     .neighborhood("North Ville")
                     .city("New York")
                     .state("South California")
-                    .zipCode(new Zipcode("12345"))
+                    .zipCode(new ZipCode("12345"))
                     .build());
   }
 
@@ -81,7 +81,7 @@ public class CustomerTestDataBuilder {
                     .neighborhood("North Ville")
                     .city("New York")
                     .state("South California")
-                    .zipCode(new Zipcode("12345"))
+                    .zipCode(new ZipCode("12345"))
                     .build());
   }
 

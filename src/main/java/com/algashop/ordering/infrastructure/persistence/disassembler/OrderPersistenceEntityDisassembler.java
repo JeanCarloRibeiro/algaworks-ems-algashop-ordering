@@ -13,7 +13,7 @@ import com.algashop.ordering.domain.model.valueobject.Phone;
 import com.algashop.ordering.domain.model.valueobject.Quantity;
 import com.algashop.ordering.domain.model.valueobject.Recipient;
 import com.algashop.ordering.domain.model.valueobject.Shipping;
-import com.algashop.ordering.domain.model.valueobject.Zipcode;
+import com.algashop.ordering.domain.model.valueobject.ZipCode;
 import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
@@ -49,7 +49,7 @@ public class OrderPersistenceEntityDisassembler {
                             .neighborhood(orderPersistence.getBilling().getAddress().getNeighborhood())
                             .city(orderPersistence.getBilling().getAddress().getCity())
                             .state(orderPersistence.getBilling().getAddress().getState())
-                            .zipCode(new Zipcode(orderPersistence.getBilling().getAddress().getZipCode()))
+                            .zipCode(new ZipCode(orderPersistence.getBilling().getAddress().getZipCode()))
                             .build())
                     .build())
             .shipping(Shipping.builder()
@@ -69,7 +69,7 @@ public class OrderPersistenceEntityDisassembler {
                               .neighborhood(orderPersistence.getShipping().getAddress().getNeighborhood())
                               .city(orderPersistence.getShipping().getAddress().getCity())
                               .state(orderPersistence.getShipping().getAddress().getState())
-                              .zipCode(new Zipcode(orderPersistence.getShipping().getAddress().getZipCode()))
+                              .zipCode(new ZipCode(orderPersistence.getShipping().getAddress().getZipCode()))
                               .build())
                     .build())
             .build();

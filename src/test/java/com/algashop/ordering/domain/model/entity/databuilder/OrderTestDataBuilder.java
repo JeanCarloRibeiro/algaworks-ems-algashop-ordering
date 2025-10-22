@@ -14,7 +14,7 @@ import com.algashop.ordering.domain.model.valueobject.Money;
 import com.algashop.ordering.domain.model.valueobject.Phone;
 import com.algashop.ordering.domain.model.valueobject.Quantity;
 import com.algashop.ordering.domain.model.valueobject.Shipping;
-import com.algashop.ordering.domain.model.valueobject.Zipcode;
+import com.algashop.ordering.domain.model.valueobject.ZipCode;
 import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 
 import java.time.LocalDate;
@@ -109,7 +109,7 @@ public class OrderTestDataBuilder {
             .neighborhood("North Ville")
             .city("Montfort")
             .state("South Carolina")
-            .zipCode(new Zipcode("79911"))
+            .zipCode(new ZipCode("79911"))
             .complement("House. 1")
             .build();
   }
@@ -121,7 +121,7 @@ public class OrderTestDataBuilder {
             .neighborhood("Sansome")
             .city("Montfort")
             .state("South Carolina")
-            .zipCode(new Zipcode("08040"))
+            .zipCode(new ZipCode("08040"))
             .build();
   }
 

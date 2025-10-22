@@ -1,12 +1,22 @@
 package com.algashop.ordering.infrastructure.persistence.assembler;
 
 import com.algashop.ordering.domain.model.entity.Order;
+import com.algashop.ordering.domain.model.entity.OrderItem;
+import com.algashop.ordering.domain.model.valueobject.Billing;
+import com.algashop.ordering.domain.model.valueobject.Shipping;
 import com.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;
 import com.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
+import com.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class OrderPersistenceEntityAssembler {
@@ -27,44 +37,91 @@ public class OrderPersistenceEntityAssembler {
     entity.setCanceledAt(order.canceledAt());
     entity.setReadAt(order.readyAt());
     entity.setVersion(order.version());
-
-    entity.setBilling(BillingEmbeddable.builder()
-            .firstName(order.billing().fullName().firstName())
-            .lastName(order.billing().fullName().lastName())
-            .document(order.billing().document().value())
-            .phone(order.billing().phone().value())
-            .email(order.billing().email().value())
-            .address(AddressEmbeddable.builder()
-                    .street(order.billing().address().street())
-                    .number(order.billing().address().number())
-                    .complement(order.billing().address().complement())
-                    .neighborhood(order.billing().address().neighborhood())
-                    .city(order.billing().address().city())
-                    .state(order.billing().address().state())
-                    .zipCode(order.billing().address().zipCode().value())
-                    .build()).build());
-
-    entity.setShipping(ShippingEmbeddable.builder()
-                    .cost(order.shipping().cost().value())
-                    .expectedDate(order.shipping().expectedDate())
-                    .recipient(RecipientEmbeddable.builder()
-                            .firstName(order.shipping().recipient().fullName().firstName())
-                            .lastName(order.shipping().recipient().fullName().lastName())
-                            .document(order.shipping().recipient().document().value())
-                            .phone(order.shipping().recipient().phone().value())
-                            .build())
-                    .address(AddressEmbeddable.builder()
-                            .street(order.shipping().address().street())
-                            .number(order.shipping().address().number())
-                            .complement(order.shipping().address().complement())
-                            .neighborhood(order.shipping().address().neighborhood())
-                            .city(order.shipping().address().city())
-                            .state(order.shipping().address().state())
-                            .zipCode(order.shipping().address().zipCode().value())
-                            .build())
-            .build());
+    entity.setBilling(toBillingEmbeddable(order.billing()));
+    entity.setShipping(toShippingEmbeddable(order.shipping()));
+    Set<OrderItemPersistenceEntity> mergedItems = mergeItems(entity, order);
+    entity.replaceItems(mergedItems);
 
     return entity;
+  }
+
+  private Set<OrderItemPersistenceEntity> mergeItems(OrderPersistenceEntity entity, Order order) {
+    Set<OrderItem> newOrUpdateItems = order.items();
+    if (CollectionUtils.isEmpty(newOrUpdateItems)) {
+      return new HashSet<>();
+    }
+
+    Set<OrderItemPersistenceEntity> existingItems = entity.getItems();
+
+    if (CollectionUtils.isEmpty(existingItems)) {
+      return newOrUpdateItems.stream()
+              .map(this::fromDomain)
+              .collect(Collectors.toSet());
+    }
+
+    Map<Long, OrderItemPersistenceEntity> existingItemMap = existingItems.stream()
+            .collect(Collectors.toMap(OrderItemPersistenceEntity::getId, item -> item));
+
+    return newOrUpdateItems.stream()
+            .map(orderItem -> {
+              OrderItemPersistenceEntity itemPersistence = existingItemMap.getOrDefault(
+                      orderItem.id().value().toLong(), new OrderItemPersistenceEntity()
+              );
+              return merge(itemPersistence, orderItem);
+    }).collect(Collectors.toSet());
+  }
+
+  public OrderItemPersistenceEntity fromDomain(OrderItem orderItem) {
+    return merge(new OrderItemPersistenceEntity(), orderItem);
+  }
+
+  private OrderItemPersistenceEntity merge(OrderItemPersistenceEntity entity, OrderItem orderItem) {
+    entity.setId(orderItem.id().value().toLong());
+    entity.setProductId(orderItem.productId().value());
+    entity.setProductName(orderItem.productName().value());
+    entity.setPrice(orderItem.price().value());
+    entity.setQuantity(orderItem.quantity().value());
+    entity.setTotalAmount(orderItem.totalAmount().value());
+    return entity;
+  }
+
+  private BillingEmbeddable toBillingEmbeddable(Billing billing) {
+    return BillingEmbeddable.builder()
+            .firstName(billing.fullName().firstName())
+            .lastName(billing.fullName().lastName())
+            .document(billing.document().value())
+            .phone(billing.phone().value())
+            .email(billing.email().value())
+            .address(AddressEmbeddable.builder()
+                    .street(billing.address().street())
+                    .number(billing.address().number())
+                    .complement(billing.address().complement())
+                    .neighborhood(billing.address().neighborhood())
+                    .city(billing.address().city())
+                    .state(billing.address().state())
+                    .zipCode(billing.address().zipCode().value())
+                    .build()).build();
+  }
+
+  private ShippingEmbeddable toShippingEmbeddable(Shipping shipping) {
+    return ShippingEmbeddable.builder()
+            .cost(shipping.cost().value())
+            .expectedDate(shipping.expectedDate())
+            .recipient(RecipientEmbeddable.builder()
+                    .firstName(shipping.recipient().fullName().firstName())
+                    .lastName(shipping.recipient().fullName().lastName())
+                    .document(shipping.recipient().document().value())
+                    .phone(shipping.recipient().phone().value())
+                    .build())
+            .address(AddressEmbeddable.builder()
+                    .street(shipping.address().street())
+                    .number(shipping.address().number())
+                    .complement(shipping.address().complement())
+                    .neighborhood(shipping.address().neighborhood())
+                    .city(shipping.address().city())
+                    .state(shipping.address().state())
+                    .zipCode(shipping.address().zipCode().value())
+                    .build()).build();
   }
 
 }

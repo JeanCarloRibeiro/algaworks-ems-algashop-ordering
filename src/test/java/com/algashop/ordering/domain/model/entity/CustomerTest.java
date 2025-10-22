@@ -7,7 +7,7 @@ import com.algashop.ordering.domain.model.valueobject.Email;
 import com.algashop.ordering.domain.model.valueobject.FullName;
 import com.algashop.ordering.domain.model.valueobject.LoyaltPoints;
 import com.algashop.ordering.domain.model.valueobject.Phone;
-import com.algashop.ordering.domain.model.valueobject.Zipcode;
+import com.algashop.ordering.domain.model.valueobject.ZipCode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +55,7 @@ public class CustomerTest {
                             .neighborhood("North Ville")
                             .city("New York")
                             .state("South California")
-                            .zipCode(new Zipcode("12345"))
+                            .zipCode(new ZipCode("12345"))
                             .build()
             )
     );

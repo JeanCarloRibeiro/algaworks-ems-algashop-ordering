@@ -2,8 +2,8 @@ package com.algashop.ordering.domain.model.valueobject;
 
 import java.util.Objects;
 
-public record Zipcode(String value) {
-  public Zipcode {
+public record ZipCode(String value) {
+  public ZipCode {
     Objects.requireNonNull(value);
     if (value.isBlank()) {
       throw new IllegalArgumentException();

@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.Optional;
+
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(SpringDataAuditingConfig.class)
@@ -28,6 +30,9 @@ class OrderPersistenceEntityRepositoryIT {
 
     orderPersistenceEntityRepository.saveAndFlush(entity);
     Assertions.assertThat(orderPersistenceEntityRepository.existsById(entity.getId())).isTrue();
+
+    OrderPersistenceEntity savedEntity = orderPersistenceEntityRepository.findById(entity.getId()).orElseThrow();
+    Assertions.assertThat(savedEntity.getItems()).isNotEmpty();
   }
 
   @Test
