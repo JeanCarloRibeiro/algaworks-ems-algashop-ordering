@@ -5,17 +5,40 @@ import com.algashop.ordering.domain.model.entity.databuilder.OrderTestDataBuilde
 import com.algashop.ordering.domain.model.valueobject.id.OrderItemId;
 import com.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
+import com.algashop.ordering.infrastructure.persistence.entity.databuilder.CustomerPersistenceEntityTestDataBuilder;
 import com.algashop.ordering.infrastructure.persistence.entity.databuilder.OrderPersistenceEntityTestDataBuilder;
+import com.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+@ExtendWith(MockitoExtension.class)
 class OrderPersistenceEntityAssemblerTest {
 
-  private final OrderPersistenceEntityAssembler assembler = new OrderPersistenceEntityAssembler();
+  @Mock
+  private CustomerPersistenceEntityRepository customerPersistenceEntityRepository;
+
+  @InjectMocks
+  private OrderPersistenceEntityAssembler assembler;
+
+  @BeforeEach
+  void setUp() {
+    Mockito.lenient().when(customerPersistenceEntityRepository.getReferenceById(Mockito.any(UUID.class))).then(
+            a -> {
+              UUID customerId = a.getArgument(0, UUID.class);
+              return CustomerPersistenceEntityTestDataBuilder.existingCustomer().id(customerId).build();
+            });
+  }
 
   @Test
   void shouldConvertToDomain() {

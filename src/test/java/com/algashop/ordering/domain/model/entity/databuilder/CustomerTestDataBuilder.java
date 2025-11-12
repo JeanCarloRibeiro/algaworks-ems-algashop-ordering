@@ -15,6 +15,9 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 public class CustomerTestDataBuilder {
+
+  public static final CustomerId DEFAULT_CUSTOMER_ID = new CustomerId();
+
   public CustomerTestDataBuilder() {
   }
 
@@ -39,7 +42,7 @@ public class CustomerTestDataBuilder {
 
   public static Customer.ExistingCustomerBuild existingCustomer() {
     return Customer.existingCustomer()
-            .id(new CustomerId())
+            .id(DEFAULT_CUSTOMER_ID)
             .registeredAt(OffsetDateTime.now())
             .archived(false)
             .archivedAt(null)

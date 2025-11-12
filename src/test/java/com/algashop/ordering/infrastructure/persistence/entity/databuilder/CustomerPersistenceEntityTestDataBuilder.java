@@ -1,6 +1,6 @@
 package com.algashop.ordering.infrastructure.persistence.entity.databuilder;
 
-import com.algashop.ordering.domain.model.utility.IdGenerator;
+import com.algashop.ordering.domain.model.entity.databuilder.CustomerTestDataBuilder;
 import com.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import com.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity.CustomerPersistenceEntityBuilder;
@@ -15,7 +15,7 @@ public class CustomerPersistenceEntityTestDataBuilder {
 
   public static CustomerPersistenceEntityBuilder existingCustomer() {
     return CustomerPersistenceEntity.builder()
-            .id(IdGenerator.generateTimeBasedUUID())
+            .id(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value())
             .firstName("Jean Carlo")
             .lastName("Ribeiro")
             .birthDate(LocalDate.of(1986, 2, 10))
