@@ -124,6 +124,7 @@ public class Order implements AggregateRoot<OrderId> {
   public void place() {
     this.verifyIfCanBeChangedToPlaced();
     this.changeStatus(OrderStatus.PLACED);
+    this.setPlacedAt(OffsetDateTime.now());
   }
 
   public void markAsPaid() {

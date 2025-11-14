@@ -2,6 +2,7 @@ package com.algashop.ordering.infrastructure.persistence.provider;
 
 import com.algashop.ordering.domain.model.entity.Order;
 import com.algashop.ordering.domain.model.repository.Orders;
+import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
 import com.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceEntityDisassembler;
@@ -14,6 +15,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.time.OffsetDateTime;
+import java.time.Year;
+import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -34,7 +39,12 @@ public class OrdersPersistenceProvider implements Orders {
 
   @Override
   public boolean exists(OrderId orderId) {
-    return false;
+    return persistenceRepository.existsById(orderId.value().toLong());
+  }
+
+  @Override
+  public long count() {
+    return persistenceRepository.count();
   }
 
   @Override
@@ -45,6 +55,16 @@ public class OrdersPersistenceProvider implements Orders {
                     (persistenceEntity) -> update(aggregateRoot, persistenceEntity),
                     () -> insert(aggregateRoot)
             );
+  }
+
+  @Override
+  public List<Order> placedByCustomerInYear(CustomerId customerId, Year year) {
+    OffsetDateTime start = year.atDay(1).atStartOfDay().atOffset(ZoneOffset.UTC);
+    OffsetDateTime end = start.plusYears(1).minusNanos(1);
+
+    List<OrderPersistenceEntity> entities = persistenceRepository.findByCustomer_IdAndPlacedAtBetween(
+            customerId.value(), start, end);
+    return entities.stream().map(disassembler::toDomainEntity).toList();
   }
 
   private void update(Order aggregateRoot, OrderPersistenceEntity persistenceEntity) {
@@ -68,8 +88,4 @@ public class OrdersPersistenceProvider implements Orders {
     version.setAccessible(false);
   }
 
-  @Override
-  public long count() {
-    return 0;
-  }
 }
