@@ -2,6 +2,7 @@ package com.algashop.ordering.domain.model.repository;
 
 import com.algashop.ordering.domain.model.entity.Customer;
 import com.algashop.ordering.domain.model.entity.databuilder.CustomerTestDataBuilder;
+import com.algashop.ordering.domain.model.valueobject.Email;
 import com.algashop.ordering.domain.model.valueobject.FullName;
 import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -120,4 +122,12 @@ class CustomersIT {
 
     Assertions.assertThat(ofEmail).isPresent();
   }
+
+  @Test
+  void shouldNotingByEmailIfNoCustomerExistsWithEmail() {
+    Optional<Customer> ofEmail = customers.ofEmail(new Email(UUID.randomUUID() + "@email.com"));
+
+    Assertions.assertThat(ofEmail).isNotPresent();
+  }
+
 }
