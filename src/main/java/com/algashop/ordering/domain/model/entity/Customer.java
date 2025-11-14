@@ -38,6 +38,7 @@ public class Customer implements AggregateRoot<CustomerId> {
                                   Address address) {
     return new Customer(
             new CustomerId(),
+            null,
             fullName,
             birthDate,
             email,
@@ -52,10 +53,11 @@ public class Customer implements AggregateRoot<CustomerId> {
   }
 
   @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existingCustomer")
-  private Customer(CustomerId id, FullName fullName, BirthDate birthDate, Email email, Phone phone,
+  private Customer(CustomerId id, Long version, FullName fullName, BirthDate birthDate, Email email, Phone phone,
                   Document document, Boolean promotionNotificationsAllowed, OffsetDateTime registeredAt,
                   Boolean archived, OffsetDateTime archivedAt, LoyaltPoints loyaltyPoints, Address address) {
     this.setId(id);
+    this.setVersion(version);
     this.setFullName(fullName);
     this.setBirthDate(birthDate);
     this.setEmail(email);

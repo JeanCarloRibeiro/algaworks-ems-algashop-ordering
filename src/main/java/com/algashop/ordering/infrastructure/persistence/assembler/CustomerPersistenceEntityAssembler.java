@@ -17,7 +17,7 @@ public class CustomerPersistenceEntityAssembler {
     entity.setId(customer.id().value());
     entity.setFirstName(customer.fullName().firstName());
     entity.setLastName(customer.fullName().lastName());
-    entity.setBirthDate(customer.birthDate().value());
+    entity.setBirthDate(customer.birthDate() != null ? customer.birthDate().value() : null);
     entity.setEmail(customer.email().value());
     entity.setPhone(customer.phone().value());
     entity.setDocument(customer.document().value());
@@ -27,6 +27,7 @@ public class CustomerPersistenceEntityAssembler {
     entity.setArchivedAt(customer.archivedAt());
     entity.setLoyaltyPoints(customer.loyaltyPoints().value());
     entity.setAddress(toAddressEmbeddable(customer.address()));
+    entity.setVersion(customer.version());
 
     return entity;
   }

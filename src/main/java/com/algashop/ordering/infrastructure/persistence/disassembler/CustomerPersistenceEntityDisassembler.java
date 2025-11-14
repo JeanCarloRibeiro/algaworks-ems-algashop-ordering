@@ -20,7 +20,7 @@ public class CustomerPersistenceEntityDisassembler {
     return Customer.existingCustomer()
             .id(new CustomerId(entity.getId()))
             .fullName(new FullName(entity.getFirstName(), entity.getLastName()))
-            .birthDate(new BirthDate(entity.getBirthDate()))
+            .birthDate(entity.getBirthDate() != null ? new BirthDate(entity.getBirthDate()) : null)
             .email(new Email(entity.getEmail()))
             .phone(new Phone(entity.getPhone()))
             .document(new Document(entity.getDocument()))
@@ -30,6 +30,7 @@ public class CustomerPersistenceEntityDisassembler {
             .archivedAt(entity.getArchivedAt())
             .loyaltyPoints(new LoyaltPoints(entity.getLoyaltyPoints()))
             .address(toAddress(entity.getAddress()))
+            .version(entity.getVersion())
             .build();
   }
 

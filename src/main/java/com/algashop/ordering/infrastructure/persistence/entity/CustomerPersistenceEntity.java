@@ -96,12 +96,4 @@ public class CustomerPersistenceEntity {
           @AttributeOverride(name = "address.zipCode", column = @Column(name = "address_zipCode"))
   })
   private AddressEmbeddable address;
-
-  public Long version() {
-    return version;
-  }
-
-  public void setVersion(Long version) {
-    this.version = version;
-  }
 }

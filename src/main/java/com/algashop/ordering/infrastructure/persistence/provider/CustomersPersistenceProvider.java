@@ -2,6 +2,7 @@ package com.algashop.ordering.infrastructure.persistence.provider;
 
 import com.algashop.ordering.domain.model.entity.Customer;
 import com.algashop.ordering.domain.model.repository.Customers;
+import com.algashop.ordering.domain.model.valueobject.Email;
 import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
 import com.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceEntityDisassembler;
@@ -70,7 +71,12 @@ public class CustomersPersistenceProvider implements Customers {
   }
 
   @Override
-  public int count() {
-    return 0;
+  public long count() {
+    return persistenceRepository.count();
+  }
+
+  @Override
+  public Optional<Customer> ofEmail(Email email) {
+    return persistenceRepository.findByEmail(email.value()).map(disassembler::toDomainEntity);
   }
 }

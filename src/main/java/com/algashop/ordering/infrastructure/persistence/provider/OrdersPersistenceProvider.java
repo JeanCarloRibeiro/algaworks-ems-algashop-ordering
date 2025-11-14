@@ -69,7 +69,7 @@ public class OrdersPersistenceProvider implements Orders {
   }
 
   @Override
-  public int count() {
+  public long count() {
     return 0;
   }
 }
