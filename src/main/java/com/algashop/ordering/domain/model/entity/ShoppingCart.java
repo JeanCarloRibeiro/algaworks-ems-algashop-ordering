@@ -7,6 +7,7 @@ import com.algashop.ordering.domain.model.valueobject.Quantity;
 import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
 import com.algashop.ordering.domain.model.valueobject.id.ShoppingCartItemId;
+import jakarta.persistence.Version;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -28,6 +29,9 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
   private OffsetDateTime createdAt;
 
   private Set<ShoppingCartItem> items;
+
+  @Version
+  private Long version;
 
   @Builder(builderClassName = "ExistingShoppingCartBuilder", builderMethodName = "existing")
   private ShoppingCart(ShoppingCartId id, CustomerId customerId, Money totalAmount,
@@ -196,6 +200,14 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
   public void setItems(Set<ShoppingCartItem> items) {
     Objects.requireNonNull(items);
     this.items = items;
+  }
+
+  public Long version() {
+    return version;
+  }
+
+  public void setVersion(Long version) {
+    this.version = version;
   }
 
   @Override
