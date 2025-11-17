@@ -2,6 +2,7 @@ package com.algashop.ordering.infrastructure.persistence.provider;
 
 import com.algashop.ordering.domain.model.entity.Order;
 import com.algashop.ordering.domain.model.repository.Orders;
+import com.algashop.ordering.domain.model.valueobject.Money;
 import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
@@ -61,6 +62,16 @@ public class OrdersPersistenceProvider implements Orders {
             .placedByCustomerInYear(customerId.value(), year.getValue());
 
     return entities.stream().map(disassembler::toDomainEntity).toList();
+  }
+
+  @Override
+  public long salesQuantityByCustomerInYear(CustomerId customerId, Year year) {
+    return persistenceRepository.salesQuantityByCustomerInYear(customerId.value(), year.getValue());
+  }
+
+  @Override
+  public Money totalSoldForCustomer(CustomerId customerId) {
+    return new Money(persistenceRepository.totalSoldForCustomer(customerId.value()));
   }
 
   private void update(Order aggregateRoot, OrderPersistenceEntity persistenceEntity) {

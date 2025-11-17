@@ -4,6 +4,7 @@ import com.algashop.ordering.domain.model.entity.Order;
 import com.algashop.ordering.domain.model.entity.databuilder.CustomerTestDataBuilder;
 import com.algashop.ordering.domain.model.entity.databuilder.OrderTestDataBuilder;
 import com.algashop.ordering.domain.model.enums.OrderStatus;
+import com.algashop.ordering.domain.model.valueobject.Money;
 import com.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
@@ -128,6 +129,42 @@ class OrdersIT {
 
     ordersList = orders.placedByCustomerInYear(new CustomerId(), Year.now());
     Assertions.assertThat(ordersList).isEmpty();
+  }
+
+  @Test
+  void shouldReturnTotalSoldForCustomer() {
+    Order order1 = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PAID).build();
+    Order order2 = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PAID).build();
+
+    orders.add(order1);
+    orders.add(order2);
+
+    orders.add(OrderTestDataBuilder.Order().orderStatus(OrderStatus.CANCELED).build());
+    orders.add(OrderTestDataBuilder.Order().orderStatus(OrderStatus.PLACED).build());
+
+    Money expectedTotalAmount = order1.totalAmount().add(order2.totalAmount());
+
+    CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+
+    Assertions.assertThat(orders.totalSoldForCustomer(customerId)).isEqualTo(expectedTotalAmount);
+    Assertions.assertThat(orders.totalSoldForCustomer(new CustomerId())).isEqualTo(Money.ZERO);
+  }
+
+  @Test
+  void shouldReturnSalesQuantityByCustomerInYear() {
+    Order order1 = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PAID).build();
+    Order order2 = OrderTestDataBuilder.Order().orderStatus(OrderStatus.PAID).build();
+
+    orders.add(order1);
+    orders.add(order2);
+
+    orders.add(OrderTestDataBuilder.Order().orderStatus(OrderStatus.CANCELED).build());
+    orders.add(OrderTestDataBuilder.Order().orderStatus(OrderStatus.PLACED).build());
+
+    CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+
+    Assertions.assertThat(orders.salesQuantityByCustomerInYear(customerId, Year.now())).isEqualTo(2L);
+    Assertions.assertThat(orders.salesQuantityByCustomerInYear(new CustomerId(), Year.now().minusYears(1))).isZero();
   }
 
 }
