@@ -1,6 +1,5 @@
 package com.algashop.ordering.infrastructure.persistence.entity.databuilder;
 
-import com.algashop.ordering.domain.model.entity.databuilder.CustomerTestDataBuilder;
 import com.algashop.ordering.domain.model.utility.IdGenerator;
 import com.algashop.ordering.domain.model.valueobject.Money;
 import com.algashop.ordering.infrastructure.persistence.entity.ShoppingCartItemPersistenceEntity;
@@ -20,7 +19,7 @@ public class ShoppingCartPersistenceEntityTestDataBuilder {
   public static ShoppingCartPersistenceEntity.ShoppingCartPersistenceEntityBuilder existingShopping() {
     return ShoppingCartPersistenceEntity.builder()
             .id(DEFAULT_SHOPPING_CART_ID.value())
-            .customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value())
+            .customer(CustomerPersistenceEntityTestDataBuilder.existingCustomer().build())
             .totalAmount(new Money("1000").value())
             .totalItems(1)
             .createdAt(OffsetDateTime.now())

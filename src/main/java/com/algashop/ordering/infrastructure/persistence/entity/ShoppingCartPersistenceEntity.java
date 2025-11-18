@@ -4,6 +4,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -37,10 +39,15 @@ public class ShoppingCartPersistenceEntity {
   @EqualsAndHashCode.Include
   private UUID id; //UUID
 
-  private UUID customerId;
   private BigDecimal totalAmount;
+
   private Integer totalItems;
+
   private OffsetDateTime createdAt;
+
+  @JoinColumn
+  @ManyToOne(optional = false)
+  private CustomerPersistenceEntity customer;
 
   @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<ShoppingCartItemPersistenceEntity> items = new HashSet<>();
@@ -56,12 +63,12 @@ public class ShoppingCartPersistenceEntity {
   private Long version;
 
   @Builder
-  public ShoppingCartPersistenceEntity(UUID id, UUID customerId, BigDecimal totalAmount, Integer totalItems,
+  public ShoppingCartPersistenceEntity(UUID id, CustomerPersistenceEntity customer, BigDecimal totalAmount, Integer totalItems,
                                        OffsetDateTime createdAt, Set<ShoppingCartItemPersistenceEntity> items,
                                        UUID createdByUserId, OffsetDateTime lastModifiedAt,
                                        UUID lastModifiedByUserId, Long version) {
     this.id = id;
-    this.customerId = customerId;
+    this.customer = customer;
     this.totalAmount = totalAmount;
     this.totalItems = totalItems;
     this.createdAt = createdAt;
@@ -72,6 +79,17 @@ public class ShoppingCartPersistenceEntity {
     this.version = version;
   }
 
+  public void addItem(ShoppingCartItemPersistenceEntity item) {
+    if (item == null) {
+      return;
+    }
+    if (this.getItems().isEmpty()) {
+      this.setItems(new HashSet<>());
+    }
+    item.setShoppingCart(this);
+    this.getItems().add(item);
+  }
+
   public void replaceItems(Set<ShoppingCartItemPersistenceEntity> updatedItems) {
     if (updatedItems == null || updatedItems.isEmpty()) {
       this.setItems(new HashSet<>());
@@ -80,6 +98,13 @@ public class ShoppingCartPersistenceEntity {
 
     updatedItems.forEach(i -> i.setShoppingCart(this));
     this.setItems(updatedItems);
+  }
+
+  public UUID getCustomerId() {
+    if (this.customer == null) {
+      return null;
+    }
+    return this.customer.getId();
   }
 
 }

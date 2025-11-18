@@ -7,5 +7,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<ShoppingCartPersistenceEntity, UUID> {
-  Optional<ShoppingCartPersistenceEntity> findByCustomerId(UUID customerId);
+  Optional<ShoppingCartPersistenceEntity> findByCustomer_Id(UUID customerId);
 }

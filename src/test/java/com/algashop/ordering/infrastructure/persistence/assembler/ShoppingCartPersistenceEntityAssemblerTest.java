@@ -3,12 +3,33 @@ package com.algashop.ordering.infrastructure.persistence.assembler;
 import com.algashop.ordering.domain.model.entity.ShoppingCart;
 import com.algashop.ordering.domain.model.entity.databuilder.ShoppingCartTestDataBuilder;
 import com.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceEntity;
+import com.algashop.ordering.infrastructure.persistence.entity.databuilder.CustomerPersistenceEntityTestDataBuilder;
+import com.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class ShoppingCartPersistenceEntityAssemblerTest {
 
-  private final ShoppingCartPersistenceEntityAssembler assembler = new ShoppingCartPersistenceEntityAssembler();
+  @Mock
+  private CustomerPersistenceEntityRepository customerPersistenceEntityRepository;
+
+  @InjectMocks
+  private ShoppingCartPersistenceEntityAssembler assembler;
+
+  @BeforeEach
+  void setUp() {
+    when(customerPersistenceEntityRepository.getReferenceById(any()))
+            .thenReturn(CustomerPersistenceEntityTestDataBuilder.existingCustomer().build());
+  }
 
   @Test
   void shouldConvertToDomain() {
