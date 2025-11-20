@@ -73,7 +73,7 @@ class OrderTest {
             i -> Assertions.assertThat(i.id()).isNotNull(),
             i -> Assertions.assertThat(i.productId()).isEqualTo(productId),
             i -> Assertions.assertThat(i.productName()).isEqualTo(new ProductName("Mouse Pad")),
-            i -> Assertions.assertThat(i.price()).isEqualTo(new Money("100")),
+            i -> Assertions.assertThat(i.price()).isEqualTo(new Money("200")),
             i -> Assertions.assertThat(i.quantity()).isEqualTo(new Quantity(1))
     );
 
@@ -100,7 +100,7 @@ class OrderTest {
     Product memory = ProductTestDataBuilder.productAltRamMemory().build();
     order.addItem(memory, new Quantity(1));
     Assertions.assertWith(order,
-            i -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("1100")),
+            i -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("1200")),
             i -> Assertions.assertThat(i.totalItems()).isEqualTo(new Quantity(2))
     );
 
@@ -206,7 +206,7 @@ class OrderTest {
     order.changeItemQuantity(orderItemId.id(), new Quantity(5));
 
     Assertions.assertWith(order,
-            o -> Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("500")),
+            o -> Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("1000")),
             o -> Assertions.assertThat(order.totalItems()).isEqualTo(new Quantity(5))
     );
 

@@ -11,7 +11,7 @@ public class ProductTestDataBuilder {
     return Product.builder()
             .id(new ProductId())
             .name(new ProductName("Notebook X11"))
-            .price(new Money("1000"))
+            .price(new Money("3000"))
             .inStock(true);
   }
 
@@ -35,7 +35,7 @@ public class ProductTestDataBuilder {
     return Product.builder()
             .id(new ProductId())
             .name(new ProductName("Mouse Pad"))
-            .price(new Money("100"))
+            .price(new Money("200"))
             .inStock(true);
   }
 

@@ -43,10 +43,10 @@ public class OrderTestDataBuilder {
     order.changePaymentMethod(paymentMethod);
 
     if (withItems) {
-      Product mouse = ProductTestDataBuilder.productAltMousePad().build();
+      Product mouse = ProductTestDataBuilder.product().build();
       order.addItem(mouse, new Quantity(2));
 
-      Product memory = ProductTestDataBuilder.productAltRamMemory().build();
+      Product memory = ProductTestDataBuilder.productAltMousePad().build();
       order.addItem(memory, new Quantity(1));
     }
 

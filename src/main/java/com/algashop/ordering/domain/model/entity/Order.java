@@ -206,6 +206,10 @@ public class Order implements AggregateRoot<OrderId> {
     return OrderStatus.CANCELED.equals(this.status());
   }
 
+  public boolean isReady() {
+    return OrderStatus.READY.equals(this.status());
+  }
+
   public OrderId id() {
     return id;
   }
@@ -382,6 +386,4 @@ public class Order implements AggregateRoot<OrderId> {
   public int hashCode() {
     return Objects.hash(id);
   }
-
-
 }

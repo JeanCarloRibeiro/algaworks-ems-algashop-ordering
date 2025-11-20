@@ -56,7 +56,7 @@ class ShoppingCartTest {
             i -> Assertions.assertThat(i.id()).isNotNull(),
             i -> Assertions.assertThat(i.product().id()).isEqualTo(productId),
             i -> Assertions.assertThat(i.product().name()).isEqualTo(new ProductName("Mouse Pad")),
-            i -> Assertions.assertThat(i.product().price()).isEqualTo(new Money("100")),
+            i -> Assertions.assertThat(i.product().price()).isEqualTo(new Money("200")),
             i -> Assertions.assertThat(i.quantity()).isEqualTo(new Quantity(1))
     );
 
@@ -76,7 +76,7 @@ class ShoppingCartTest {
     cart.removeItem(cartItem.id());
 
     Assertions.assertWith(cart,
-            i -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("100")),
+            i -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("200")),
             i -> Assertions.assertThat(i.totalItems()).isEqualTo(new Quantity(1))
     );
 
@@ -114,7 +114,7 @@ class ShoppingCartTest {
     cart.changeItemQuantity(cartItem.id(), new Quantity(5));
 
     Assertions.assertWith(cart,
-            o -> Assertions.assertThat(o.totalAmount()).isEqualTo(new Money("500")),
+            o -> Assertions.assertThat(o.totalAmount()).isEqualTo(new Money("1000")),
             o -> Assertions.assertThat(o.totalItems()).isEqualTo(new Quantity(5))
     );
 
@@ -170,7 +170,7 @@ class ShoppingCartTest {
     Assertions.assertWith(cartItem,
             o -> Assertions.assertThat(o.id()).isNotNull(),
             o -> Assertions.assertThat(o.available()).isTrue(),
-            o -> Assertions.assertThat(o.totalAmount()).isEqualTo(new Money("100"))
+            o -> Assertions.assertThat(o.totalAmount()).isEqualTo(new Money("200"))
     );
   }
 

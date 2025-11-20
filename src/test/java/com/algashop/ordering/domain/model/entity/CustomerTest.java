@@ -102,9 +102,6 @@ public class CustomerTest {
     Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> customer.addLoyaltyPoints(LoyaltPoints.ZERO));
-
-    Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> customer.addLoyaltyPoints(new LoyaltPoints(-10)));
   }
 
